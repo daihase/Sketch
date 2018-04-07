@@ -11,6 +11,10 @@
 
 Sketch has the basic functions for drawing from the beginning. Anyone can easily create drawing iOS Applications.
 
+<div align="center">
+![Sketch_animation1](https://raw.github.com/wiki/daihase/resource_manage/gifs/sketch-animation.gif)
+</div>
+
 ## :memo: Features
 - Pen tool
 - Eraser tool

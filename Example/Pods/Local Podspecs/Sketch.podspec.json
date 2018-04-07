@@ -1,0 +1,22 @@
+{
+  "name": "Sketch",
+  "version": "0.1.0",
+  "summary": "A short description of Sketch.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/daihase/Sketch",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "daihase": "daisuke_hasegawa@librastudio.co.jp"
+  },
+  "source": {
+    "git": "https://github.com/daihase/Sketch.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "Sketch/Classes/**/*"
+}

@@ -1,0 +1,6 @@
+framework module Sketch {
+  umbrella header "Sketch-umbrella.h"
+
+  export *
+  module * { export * }
+}

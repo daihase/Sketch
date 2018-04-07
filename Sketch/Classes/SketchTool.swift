@@ -1,6 +1,6 @@
 //
-//  DoodleKitTool.swift
-//  DoodleKit
+//  SketchTool.swift
+//  Sketch
 //
 //  Created by daihase on 04/06/2018.
 //  Copyright (c) 2018 daihase. All rights reserved.

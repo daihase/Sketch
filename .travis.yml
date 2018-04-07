@@ -4,6 +4,8 @@
 
 osx_image: xcode9.2
 language: objective-c
+xcode_project: Sketch.xcodeproj
+xcode_scheme: Sketch
 branches:
   only:
     - master

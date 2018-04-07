@@ -1,5 +1,5 @@
 <div style="text-align: center; width: 100%">
-<img src="Documents/Sketch.png" width: 100% height: 100% alt="Sketch Logo"> 
+<img src="Documents/Sketch.png" width: 100% height: 100% alt="Sketch Logo">
 </div>
 
 ## Sketch
@@ -19,7 +19,7 @@ Sketch has the basic functions for drawing from the beginning. Anyone can easily
 - Draw on Camera / Gallery image
 - Multiple colors can be set
 - Multiple width can be set
-- Multiple alpha can be set 
+- Multiple alpha can be set
 - Multiple tools (Line, Arrow, Rectangle, Ellipse)
 - Multiple Pen Filters (Neon, Blur)
 
@@ -42,8 +42,7 @@ pod 'Sketch'
   * **step2:** Open Inspector and enter `SketchView` in the Class field of Custom Class.
   * **step3:** Then just connect `SketchView` to UIViewController as usual.
 
-<img src="Documents/Storyboard.png" width="797" height="522" alt="Sketch Logo"> 
-
+<img src="Documents/Storyboard.png" width="797" height="522" alt="Sketch Logo">
 
 * with Code
 
@@ -55,7 +54,7 @@ let sketchView = SketchView(frame: CGRect(
   width: UIScreen.main.bounds.width,
   height: UIScreen.main.bounds.height)
 )
-// just set it to viewcontroller's view
+// just set it to view
 self.view.addSubview(sketchView)
 ```
 

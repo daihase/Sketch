@@ -14,22 +14,24 @@ Sketch has the basic functions for drawing from the beginning. Anyone can easily
 ![Sketch_animation1](https://raw.github.com/wiki/daihase/resource_manage/gifs/sketch-animation.gif)
 
 ## :memo: Features
-- Pen tool
-- Eraser tool
-- Stamp tool
-- Undo / Redo
-- Draw on Camera / Gallery image
-- Multiple colors can be set
-- Multiple width can be set
-- Multiple alpha can be set
-- Multiple tools (Line, Arrow, Rectangle, Ellipse)
-- Multiple Pen Filters (Neon, Blur)
+- [x] Pen tool
+- [x] Eraser tool
+- [x] Stamp tool
+- [x] Undo / Redo
+- [x] Draw on Camera / Gallery image
+- [x] Multiple colors can be set
+- [x] Multiple width can be set
+- [x] Multiple alpha can be set
+- [x] Multiple tools (Line, Arrow, Rectangle, Ellipse)
+- [x] Multiple Pen Filters (Neon, Blur)
 
 ## :pencil2: Requirements
 - Xcode 9.0+
 - Swift 4.0+
 
 ## :pencil2: Installation
+
+#### Using [CocoaPods](https://cocoapods.org)
 
 Sketch is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
@@ -38,25 +40,40 @@ it, simply add the following line to your Podfile:
 pod 'Sketch'
 ```
 
+And run  `pod install`
+
+
 ## :pencil2: How to use
-* with Stroryboard
-  * **step1:** Set UIView on Storyboard.
-  * **step2:** Open Inspector and enter `SketchView` in the Class field of Custom Class.
-  * **step3:** Then just connect `SketchView` to UIViewController as usual.
+
+**Using IB/Storyboards:**
+
+Only **3** steps needed to use `SketchView`
+
+  **1.** Set UIView on Storyboard.
+
+  **2.** Open Inspector and enter `SketchView` in the Class field of Custom Class.
+
+  **3.** Then just connect `SketchView` to UIViewController as usual.
 
 <img src="Documents/Storyboard.png" width="797" height="522" alt="Sketch Logo">
 
-* with Code
+**Using code:**
+
+  **1.** Import `Sketch` in proper place.
+```swift
+import Sketch
+```
+
+**2.** Create `SketchView`, and addSubview to the view you want to set.
 
 ```Swift
-// Create DrawView instance
 let sketchView = SketchView(frame: CGRect(
   x: 0,
   y: 0,
   width: UIScreen.main.bounds.width,
   height: UIScreen.main.bounds.height)
 )
-// just set it to view
+
 self.view.addSubview(sketchView)
 ```
 

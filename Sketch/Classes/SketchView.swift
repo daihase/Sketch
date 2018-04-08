@@ -36,9 +36,9 @@ public class SketchView: UIView {
     public var lineAlpha = CGFloat(1)
     public var stampImage: UIImage?
     public var drawTool: SketchToolType = .pen
-    private var currentTool: SketchTool?
     public var drawingPenType: PenType = .normal
     public var sketchViewDelegate: SketchViewDelegate?
+    private var currentTool: SketchTool?
     private let pathArray: NSMutableArray = NSMutableArray()
     private let bufferArray: NSMutableArray = NSMutableArray()
     private var currentPoint: CGPoint?
@@ -47,24 +47,24 @@ public class SketchView: UIView {
     private var image: UIImage?
     private var backgroundImage: UIImage?
     private var drawMode: ImageRenderingMode = .original
-    
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
         prepareForInitial()
     }
-    
+
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
         prepareForInitial()
     }
-    
+
     private func prepareForInitial() {
         backgroundColor = UIColor.clear
     }
-    
+
     public override func draw(_ rect: CGRect) {
         super.draw(rect)
-        
+
         switch drawMode {
         case .original:
             image?.draw(at: CGPoint.zero)
@@ -73,13 +73,13 @@ public class SketchView: UIView {
             image?.draw(in: self.bounds)
             break
         }
-        
+
         currentTool?.draw()
     }
-    
+
     private func updateCacheImage(_ isUpdate: Bool) {
         UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0.0)
-        
+
         if isUpdate {
             image = nil
             switch drawMode {
@@ -92,7 +92,7 @@ public class SketchView: UIView {
                 (backgroundImage?.copy() as! UIImage).draw(in: self.bounds)
                 break
             }
-            
+
             for obj in pathArray {
                 if let tool = obj as? SketchTool {
                     tool.draw()
@@ -102,11 +102,11 @@ public class SketchView: UIView {
             image?.draw(at: .zero)
             currentTool?.draw()
         }
-        
+
         image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
     }
-    
+
     private func toolWithCurrentSettings() -> SketchTool? {
         switch drawTool {
         case .pen:
@@ -137,17 +137,17 @@ public class SketchView: UIView {
             return ellipseTool
         }
     }
-    
+
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
-        
+
         previousPoint1 = touch.previousLocation(in: self)
         currentPoint = touch.location(in: self)
         currentTool = toolWithCurrentSettings()
         currentTool?.lineWidth = lineWidth
         currentTool?.lineColor = lineColor
         currentTool?.lineAlpha = lineAlpha
-        
+
         switch currentTool! {
         case is PenTool:
             guard let penTool = currentTool as? PenTool else { return }
@@ -165,69 +165,69 @@ public class SketchView: UIView {
             currentTool.setInitialPoint(currentPoint!)
         }
     }
-    
+
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
-        
+
         previousPoint2 = previousPoint1
         previousPoint1 = touch.previousLocation(in: self)
         currentPoint = touch.location(in: self)
-        
+
         if let penTool = currentTool as? PenTool {
             let renderingBox = penTool.createBezierRenderingBox(previousPoint2!, widhPreviousPoint: previousPoint1!, withCurrentPoint: currentPoint!)
-            
+
             setNeedsDisplay(renderingBox)
         } else {
             currentTool?.moveFromPoint(previousPoint1!, toPoint: currentPoint!)
             setNeedsDisplay()
         }
     }
-    
+
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         touchesMoved(touches, with: event)
         finishDrawing()
     }
-    
+
     fileprivate func finishDrawing() {
         updateCacheImage(false)
         bufferArray.removeAllObjects()
         sketchViewDelegate?.drawView?(self, didEndDrawUsingTool: currentTool! as AnyObject)
         currentTool = nil
     }
-    
+
     private func resetTool() {
         currentTool = nil
     }
-    
+
     public func clear() {
         resetTool()
         bufferArray.removeAllObjects()
         pathArray.removeAllObjects()
         updateCacheImage(true)
-        
+
         setNeedsDisplay()
     }
-    
+
     func pinch() {
         resetTool()
         guard let tool = pathArray.lastObject as? SketchTool else { return }
         bufferArray.add(tool)
         pathArray.removeLastObject()
         updateCacheImage(true)
-        
+
         setNeedsDisplay()
     }
-    
+
     public func loadImage(image: UIImage) {
         self.image = image
         backgroundImage =  image.copy() as? UIImage
         bufferArray.removeAllObjects()
         pathArray.removeAllObjects()
         updateCacheImage(true)
-        
+
         setNeedsDisplay()
     }
-    
+
     public func undo() {
         if canUndo() {
             guard let tool = pathArray.lastObject as? SketchTool else { return }
@@ -235,11 +235,11 @@ public class SketchView: UIView {
             bufferArray.add(tool)
             pathArray.removeLastObject()
             updateCacheImage(true)
-            
+
             setNeedsDisplay()
         }
     }
-    
+
     public func redo() {
         if canRedo() {
             guard let tool = bufferArray.lastObject as? SketchTool else { return }
@@ -247,15 +247,15 @@ public class SketchView: UIView {
             pathArray.add(tool)
             bufferArray.removeLastObject()
             updateCacheImage(true)
-            
+
             setNeedsDisplay()
         }
     }
-    
+
     func canUndo() -> Bool {
         return pathArray.count > 0
     }
-    
+
     func canRedo() -> Bool {
         return bufferArray.count > 0
     }

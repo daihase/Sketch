@@ -13,27 +13,27 @@ class ViewController: UIViewController, ButtonViewInterface {
     @IBOutlet weak var sketchView: SketchView!
     var buttonView: ButtonView!
     var scrollView = UIScrollView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        // If you use with code, in the following way
+        // If you set it by code, let's do as follows
         /*
          let sketchView = SketchView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
-         view.addSubview(drawView)
+         view.addSubview(sketchView)
         */
-        
+
         // create ButtonView instance
         buttonView = ButtonView.instanceFromNib(self)
-        
+
         view.addSubview(scrollView)
         scrollView.addSubview(buttonView)
-        
+
         scrollView.contentSize = buttonView.frame.size
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.frame.origin.x = 0
         scrollView.frame.origin.y = UIScreen.main.bounds.height - buttonView.frame.size.height
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -46,23 +46,23 @@ extension ViewController {
     func tapPenButton() {
         sketchView.drawTool = .pen
     }
-    
+
     func tapEraserButton() {
         sketchView.drawTool = .eraser
     }
-    
+
     func tapUndoButton() {
         sketchView.undo()
     }
-    
+
     func tapRedoButton() {
         sketchView.redo()
     }
-    
+
     func tapClearButton() {
         sketchView.clear()
     }
-    
+
     func tapPaletteButton() {
         // Black
         let blackAction = UIAlertAction(title: "Black", style: .default) { _ in
@@ -78,16 +78,16 @@ extension ViewController {
         }
         // Cancel
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { _ in }
-        
+
         let alertController = UIAlertController(title: "Please select a color", message: nil, preferredStyle: .alert)
         alertController.addAction(blackAction)
         alertController.addAction(blueAction)
         alertController.addAction(redAction)
         alertController.addAction(cancelAction)
-        
+
         present(alertController, animated: true, completion: nil)
     }
-    
+
     func tapStampButton() {
         // Heart
         let heartAction = UIAlertAction(title: "Heart", style: .default) { _ in
@@ -103,21 +103,21 @@ extension ViewController {
         }
         // Cancel
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { _ in }
-        
+
         let alertController = UIAlertController(title: "Please select a stamp", message: nil, preferredStyle: .alert)
         alertController.addAction(heartAction)
         alertController.addAction(starAction)
         alertController.addAction(smileAction)
         alertController.addAction(cancelAction)
-        
+
         present(alertController, animated: true, completion: nil)
     }
-    
+
     private func changeStampMode(stampName: String) {
         sketchView.stampImage = UIImage(named: stampName)
         sketchView.drawTool = .stamp
     }
-    
+
     func tapFigureButton() {
         // Line
         let lineAction = UIAlertAction(title: "Line", style: .default) { _ in
@@ -145,7 +145,7 @@ extension ViewController {
         }
         // Cancel
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { _ in }
-        
+
         let alertController = UIAlertController(title: "Please select a figure", message: nil, preferredStyle: .alert)
         alertController.addAction(lineAction)
         alertController.addAction(arrowAction)
@@ -154,10 +154,10 @@ extension ViewController {
         alertController.addAction(ellipseAction)
         alertController.addAction(ellipseFillAction)
         alertController.addAction(cancelAction)
-        
+
         present(alertController, animated: true, completion: nil)
     }
-    
+
     func tapFilterButton() {
         // Normal
         let normalAction = UIAlertAction(title: "Normal", style: .default) { _ in
@@ -173,16 +173,16 @@ extension ViewController {
         }
         // Cancel
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { _ in }
-        
+
         let alertController = UIAlertController(title: "Please select a filter type", message: nil, preferredStyle: .alert)
         alertController.addAction(normalAction)
         alertController.addAction(blurAction)
         alertController.addAction(neonAction)
         alertController.addAction(cancelAction)
-        
+
         present(alertController, animated: true, completion: nil)
     }
-    
+
     func tapCameraButton() {
         // Camera
         let cameraAction = UIAlertAction(title: "Camera", style: .default) { _ in
@@ -194,15 +194,15 @@ extension ViewController {
         }
         // Cancel
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { _ in }
-        
+
         let alertController = UIAlertController(title: "Please select a Picture", message: nil, preferredStyle: .alert)
         alertController.addAction(cameraAction)
         alertController.addAction(galleryAction)
         alertController.addAction(cancelAction)
-        
+
         present(alertController, animated: true, completion: nil)
     }
-    
+
     private func setImageFromCamera() {
         PhotoRequestManager.requestPhotoFromCamera(self){ [weak self] result in
             switch result {
@@ -215,7 +215,7 @@ extension ViewController {
             }
         }
     }
-    
+
     private func setImageFromGallery() {
         PhotoRequestManager.requestPhotoLibrary(self){ [weak self] result in
             switch result {

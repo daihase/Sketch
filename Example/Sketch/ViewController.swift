@@ -18,8 +18,14 @@ class ViewController: UIViewController, ButtonViewInterface {
         super.viewDidLoad()
         // If you set it by code, let's do as follows
         /*
-         let sketchView = SketchView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
-         view.addSubview(sketchView)
+        let sketchView = SketchView(frame:
+            CGRect(x: 0,
+                   y: 0,
+                   width: UIScreen.main.bounds.width,
+                   height: UIScreen.main.bounds.height
+            )
+        )
+        view.addSubview(sketchView)
         */
 
         // create ButtonView instance

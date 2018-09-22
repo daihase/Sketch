@@ -25,11 +25,14 @@ class ButtonView: UIView {
     var delegate: ButtonViewInterface?
     
     class func instanceFromNib(_ delegate: ButtonViewInterface?) -> ButtonView {
-        
         let buttonView : ButtonView = UINib(
             nibName: "ButtonView",
-            bundle: Bundle.main)
-            .instantiate(withOwner: self, options: nil).first as! ButtonView
+            bundle: Bundle.main
+            ).instantiate(
+                withOwner: self,
+                options: nil
+            ).first as! ButtonView
+        
         buttonView.delegate = delegate
         
         return buttonView

@@ -356,3 +356,27 @@ class StampTool: SketchTool {
         }
     }
 }
+
+class FillTool: SketchTool {
+    var lineWidth: CGFloat
+    var lineColor: UIColor
+    var lineAlpha: CGFloat
+    var touchPoint: CGPoint
+
+    init() {
+        lineWidth = 0
+        lineColor = .blue
+        lineAlpha = 0
+        touchPoint = CGPoint(x: 0, y: 0)
+    }
+
+    func setInitialPoint(_ firstPoint: CGPoint) {
+        touchPoint = firstPoint
+    }
+
+    func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {}
+
+    func draw() {
+
+    }
+}

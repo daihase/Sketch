@@ -19,6 +19,7 @@ protocol ButtonViewInterface: class {
     func tapFigureButton()
     func tapFilterButton()
     func tapCameraButton()
+    func tapFillButton()
 }
 
 class ButtonView: UIView {
@@ -86,5 +87,10 @@ class ButtonView: UIView {
     // Tap Camera Button
     @IBAction func tapCameraButton(_ sender: Any) {
        delegate?.tapCameraButton()
+    }
+
+    // Tap Fill Button
+    @IBAction func tapFillButton(_ sender: Any) {
+        delegate?.tapFillButton()
     }
 }

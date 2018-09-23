@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,7 +13,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="zno-2E-1Ho" userLabel="ButtonView" customClass="ButtonView" customModule="Sketch_Example" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="559" height="50"/>
+            <rect key="frame" x="0.0" y="0.0" width="610" height="50"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iLe-2C-NT3" userLabel="Eraser">
@@ -118,6 +117,16 @@
                         <action selector="tapCameraButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="WGo-ir-ykT"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uxk-YX-gae">
+                    <rect key="frame" x="555" y="0.0" width="50" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="uxk-YX-gae" secondAttribute="height" multiplier="1:1" id="3Sf-sD-qkj"/>
+                    </constraints>
+                    <state key="normal" image="Fill"/>
+                    <connections>
+                        <action selector="tapFillButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="M64-Fg-wsf"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
                 <constraint firstItem="4pP-jQ-lqT" firstAttribute="leading" secondItem="iLe-2C-NT3" secondAttribute="trailing" constant="5" id="5LG-gf-iCZ"/>
@@ -125,6 +134,7 @@
                 <constraint firstItem="QZg-fK-eZE" firstAttribute="leading" secondItem="fWc-Gd-SRf" secondAttribute="trailing" constant="5" id="8N3-Fd-Ihl"/>
                 <constraint firstItem="TuB-yr-P1O" firstAttribute="bottom" secondItem="Z4c-q5-Ylm" secondAttribute="bottom" id="AKK-mV-mDy"/>
                 <constraint firstItem="czJ-mb-Vl1" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="CaO-PG-hkm"/>
+                <constraint firstItem="uxk-YX-gae" firstAttribute="leading" secondItem="UuW-3G-hcX" secondAttribute="trailing" constant="5" id="CgB-sa-aeC"/>
                 <constraint firstItem="UuW-3G-hcX" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="EIv-8g-VFx"/>
                 <constraint firstItem="QZg-fK-eZE" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="GEO-95-en7"/>
                 <constraint firstAttribute="bottom" secondItem="4pP-jQ-lqT" secondAttribute="bottom" id="Gjz-dS-ez9"/>
@@ -136,6 +146,7 @@
                 <constraint firstItem="rnG-cl-0U1" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="NVb-BY-HiY"/>
                 <constraint firstItem="TuB-yr-P1O" firstAttribute="leading" secondItem="QZg-fK-eZE" secondAttribute="trailing" constant="5" id="O2H-Mw-QVZ"/>
                 <constraint firstItem="UuW-3G-hcX" firstAttribute="leading" secondItem="rnG-cl-0U1" secondAttribute="trailing" constant="5" id="P5I-Se-GFv"/>
+                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="uxk-YX-gae" secondAttribute="bottom" id="QFm-3b-izM"/>
                 <constraint firstItem="4pP-jQ-lqT" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="Sg8-2S-Yu4"/>
                 <constraint firstItem="QZg-fK-eZE" firstAttribute="bottom" secondItem="Z4c-q5-Ylm" secondAttribute="bottom" id="VFO-Kt-lCx"/>
                 <constraint firstAttribute="bottom" secondItem="czJ-mb-Vl1" secondAttribute="bottom" id="ZG3-FK-jQC"/>
@@ -149,11 +160,13 @@
                 <constraint firstItem="iLe-2C-NT3" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="u5g-gs-eN7"/>
                 <constraint firstItem="DzJ-Or-GLT" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="usF-IG-VBR"/>
                 <constraint firstItem="DzJ-Or-GLT" firstAttribute="leading" secondItem="TuB-yr-P1O" secondAttribute="trailing" constant="5" id="vGF-fH-7cu"/>
+                <constraint firstItem="uxk-YX-gae" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="wfw-pN-eYr"/>
+                <constraint firstItem="uxk-YX-gae" firstAttribute="width" secondItem="uxk-YX-gae" secondAttribute="height" multiplier="1:1" id="yeY-yb-jaZ"/>
                 <constraint firstItem="DzJ-Or-GLT" firstAttribute="bottom" secondItem="Z4c-q5-Ylm" secondAttribute="bottom" id="yif-xH-2Oo"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="Z4c-q5-Ylm"/>
-            <point key="canvasLocation" x="128.5" y="229"/>
+            <point key="canvasLocation" x="168" y="228.48575712143929"/>
         </view>
     </objects>
     <resources>
@@ -161,6 +174,7 @@
         <image name="Clear" width="48" height="48"/>
         <image name="Eraser" width="48" height="48"/>
         <image name="Figure" width="48" height="48"/>
+        <image name="Fill" width="48" height="48"/>
         <image name="Filter" width="48" height="48"/>
         <image name="Palette" width="48" height="48"/>
         <image name="Pen" width="48" height="48"/>

@@ -1,22 +1,19 @@
 {
   "name": "Sketch",
-  "version": "0.1.0",
-  "summary": "A short description of Sketch.",
-  "description": "TODO: Add long description of the pod here.",
+  "version": "2.0",
+  "license": "MIT",
   "homepage": "https://github.com/daihase/Sketch",
-  "license": {
-    "type": "MIT",
-    "file": "LICENSE"
-  },
   "authors": {
     "daihase": "daisuke_hasegawa@librastudio.co.jp"
   },
+  "summary": "Just placing, anyone can make drawing application.",
   "source": {
     "git": "https://github.com/daihase/Sketch.git",
-    "tag": "0.1.0"
+    "tag": "2.0"
   },
+  "swift_version": "4.2",
   "platforms": {
-    "ios": "8.0"
+    "ios": "9.2"
   },
   "source_files": "Sketch/Classes/**/*"
 }

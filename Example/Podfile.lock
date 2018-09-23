@@ -1,15 +1,15 @@
 PODS:
-  - Nimble (7.0.3)
+  - Nimble (7.3.1)
   - Quick (1.2.0)
-  - Sketch (0.1.0)
+  - Sketch (2.0)
 
 DEPENDENCIES:
-  - Nimble (~> 7.0.2)
+  - Nimble (~> 7.3.1)
   - Quick (~> 1.2.0)
   - Sketch (from `../`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - Nimble
     - Quick
 
@@ -18,10 +18,10 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Nimble: 7f5a9c447a33002645a071bddafbfb24ea70e0ac
+  Nimble: 04f732da099ea4d153122aec8c2a88fd0c7219ae
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
-  Sketch: 4bb43989a4be284ae035e296bedaa5c3514bc88f
+  Sketch: a932f66d6976e1343e8d6b8501f956072498c10c
 
-PODFILE CHECKSUM: c6676a5605924dd43fb77269d26035dea8c9f442
+PODFILE CHECKSUM: 3f42c7ca97d29e4b7664bd4cda50c583fcfd7313
 
-COCOAPODS: 1.5.0
+COCOAPODS: 1.5.2

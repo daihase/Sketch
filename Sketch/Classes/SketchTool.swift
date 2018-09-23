@@ -342,9 +342,6 @@ class StarTool: SketchTool {
                             y: min(firstPoint.y,lastPoint.y),
                             width: abs(firstPoint.x - lastPoint.x),
                             height: abs(firstPoint.y - lastPoint.y))
-        ctx.translateBy(x: rect.minX, y: rect.minY)
-        let scalefactor:CGFloat = min(rect.width / 500.0 , rect.height / 500.0)
-        ctx.scaleBy(x: scalefactor,y:scalefactor)
 
         let pathRef = CGMutablePath()
         pathRef.move(to: CGPoint(x: 98.582, y: 495))
@@ -359,10 +356,16 @@ class StarTool: SketchTool {
         pathRef.addLine(to: CGPoint(x: 250, y: 411.298))
         pathRef.closeSubpath()
 
+
+        var s = CGAffineTransform(scaleX: rect.width / 500.0 ,y: rect.height / 500.0)
+        var a = CGAffineTransform(translationX: rect.minX, y: rect.minY)
+        guard let pathRefTrans  = pathRef.copy(using: &s)?.copy(using: &a) else { return }
+
+
         ctx.setLineWidth(lineWidth)
         ctx.setAlpha(lineAlpha)
         ctx.setStrokeColor(lineColor.cgColor)
-        ctx.addPath(pathRef)
+        ctx.addPath(pathRefTrans)
         ctx.strokePath()
     }
 }

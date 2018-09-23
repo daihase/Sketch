@@ -70,49 +70,51 @@ class PenTool: UIBezierPath, SketchTool {
     }
     
     func draw() {
-        let context: CGContext = UIGraphicsGetCurrentContext()!
-            switch drawingPenType {
-            case .normal:
-                context.addPath(path)
-                context.setLineCap(.round)
-                context.setLineWidth(lineWidth)
-                context.setStrokeColor(lineColor.cgColor)
-                context.setBlendMode(.normal)
-                context.setAlpha(lineAlpha)
-                context.strokePath()
-            case .blur:
-                context.addPath(path)
-                context.setLineCap(.round)
-                context.setLineWidth(lineWidth)
-                context.setStrokeColor(lineColor.cgColor)
-                context.setShadow(offset: CGSize(width: 0, height: 0), blur: lineWidth / 1.25, color: lineColor.cgColor)
-                context.setAlpha(lineAlpha)
-                context.strokePath()
-            case .neon:
-                let shadowColor = lineColor
-                let transparentShadowColor = shadowColor.withAlphaComponent(lineAlpha)
-
-                context.addPath(path)
-                context.setLineCap(.round)
-                context.setLineWidth(lineWidth)
-                context.setStrokeColor(UIColor.white.cgColor)
-                context.setShadow(offset: CGSize(width: 0, height: 0), blur: lineWidth / 1.25, color: transparentShadowColor.cgColor)
-                context.setBlendMode(.screen)
-                context.strokePath()
-            }
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }
+        
+        switch drawingPenType {
+        case .normal:
+            ctx.addPath(path)
+            ctx.setLineCap(.round)
+            ctx.setLineWidth(lineWidth)
+            ctx.setStrokeColor(lineColor.cgColor)
+            ctx.setBlendMode(.normal)
+            ctx.setAlpha(lineAlpha)
+            ctx.strokePath()
+        case .blur:
+            ctx.addPath(path)
+            ctx.setLineCap(.round)
+            ctx.setLineWidth(lineWidth)
+            ctx.setStrokeColor(lineColor.cgColor)
+            ctx.setShadow(offset: CGSize(width: 0, height: 0), blur: lineWidth / 1.25, color: lineColor.cgColor)
+            ctx.setAlpha(lineAlpha)
+            ctx.strokePath()
+        case .neon:
+            let shadowColor = lineColor
+            let transparentShadowColor = shadowColor.withAlphaComponent(lineAlpha)
+            
+            ctx.addPath(path)
+            ctx.setLineCap(.round)
+            ctx.setLineWidth(lineWidth)
+            ctx.setStrokeColor(UIColor.white.cgColor)
+            ctx.setShadow(offset: CGSize(width: 0, height: 0), blur: lineWidth / 1.25, color: transparentShadowColor.cgColor)
+            ctx.setBlendMode(.screen)
+            ctx.strokePath()
+        }
     }
 }
 
 class EraserTool: PenTool {
     override func draw() {
-        let context: CGContext = UIGraphicsGetCurrentContext()!
-        context.saveGState()
-        context.addPath(path)
-        context.setLineCap(.round)
-        context.setLineWidth(lineWidth)
-        context.setBlendMode(.clear)
-        context.strokePath()
-        context.restoreGState()
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }
+        
+        ctx.saveGState()
+        ctx.addPath(path)
+        ctx.setLineCap(.round)
+        ctx.setLineWidth(lineWidth)
+        ctx.setBlendMode(.clear)
+        ctx.strokePath()
+        ctx.restoreGState()
     }
 }
 
@@ -140,14 +142,15 @@ class LineTool: SketchTool {
     }
 
     internal func draw() {
-        let context: CGContext = UIGraphicsGetCurrentContext()!
-        context.setStrokeColor(lineColor.cgColor)
-        context.setLineCap(.square)
-        context.setLineWidth(lineWidth)
-        context.setAlpha(lineAlpha)
-        context.move(to: CGPoint(x: firstPoint.x, y: firstPoint.y))
-        context.addLine(to: CGPoint(x: lastPoint.x, y: lastPoint.y))
-        context.strokePath()
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }
+        
+        ctx.setStrokeColor(lineColor.cgColor)
+        ctx.setLineCap(.square)
+        ctx.setLineWidth(lineWidth)
+        ctx.setAlpha(lineAlpha)
+        ctx.move(to: CGPoint(x: firstPoint.x, y: firstPoint.y))
+        ctx.addLine(to: CGPoint(x: lastPoint.x, y: lastPoint.y))
+        ctx.strokePath()
     }
 
     func angleWithFirstPoint(first: CGPoint, second: CGPoint) -> Float {
@@ -190,27 +193,28 @@ class ArrowTool: SketchTool {
     }
 
     func draw() {
-        let context: CGContext = UIGraphicsGetCurrentContext()!
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }
+        
         let capHeight = lineWidth * 4.0
         let angle = angleWithFirstPoint(first: firstPoint, second: lastPoint)
         var point1 = pointWithAngle(angle: CGFloat(angle + Float(6.0 * .pi / 8.0)), distance: capHeight)
         var point2 = pointWithAngle(angle:  CGFloat(angle - Float(6.0 * .pi / 8.0)), distance: capHeight)
         let endPointOffset = pointWithAngle(angle: CGFloat(angle), distance: lineWidth)
 
-        context.setStrokeColor(lineColor.cgColor)
-        context.setLineCap(.square)
-        context.setLineWidth(lineWidth)
-        context.setAlpha(lineAlpha)
-        context.move(to: CGPoint(x: firstPoint.x, y: firstPoint.y))
-        context.addLine(to: CGPoint(x: lastPoint.x, y: lastPoint.y))
+        ctx.setStrokeColor(lineColor.cgColor)
+        ctx.setLineCap(.square)
+        ctx.setLineWidth(lineWidth)
+        ctx.setAlpha(lineAlpha)
+        ctx.move(to: CGPoint(x: firstPoint.x, y: firstPoint.y))
+        ctx.addLine(to: CGPoint(x: lastPoint.x, y: lastPoint.y))
 
         point1 = CGPoint(x: lastPoint.x + point1.x, y: lastPoint.y + point1.y)
         point2 = CGPoint(x: lastPoint.x + point2.x, y: lastPoint.y + point2.y)
 
-        context.move(to: CGPoint(x: point1.x, y: point1.y))
-        context.addLine(to: CGPoint(x: lastPoint.x + endPointOffset.x, y: lastPoint.y + endPointOffset.y))
-        context.addLine(to: CGPoint(x: point2.x, y: point2.y))
-        context.strokePath()
+        ctx.move(to: CGPoint(x: point1.x, y: point1.y))
+        ctx.addLine(to: CGPoint(x: lastPoint.x + endPointOffset.x, y: lastPoint.y + endPointOffset.y))
+        ctx.addLine(to: CGPoint(x: point2.x, y: point2.y))
+        ctx.strokePath()
     }
 
     func angleWithFirstPoint(first: CGPoint, second: CGPoint) -> Float {
@@ -255,17 +259,18 @@ class RectTool: SketchTool {
     }
 
     internal func draw() {
-        let context: CGContext = UIGraphicsGetCurrentContext()!
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }
+        
         let rectToFill = CGRect(x: firstPoint.x, y: firstPoint.y, width: lastPoint.x - self.firstPoint.x, height: lastPoint.y - firstPoint.y)
         
-        context.setAlpha(lineAlpha)
+        ctx.setAlpha(lineAlpha)
         if self.isFill {
-            context.setFillColor(lineColor.cgColor)
-            UIGraphicsGetCurrentContext()!.fill(rectToFill)
+            ctx.setFillColor(lineColor.cgColor)
+            ctx.fill(rectToFill)
         } else {
-            context.setStrokeColor(lineColor.cgColor)
-            context.setLineWidth(lineWidth)
-            UIGraphicsGetCurrentContext()!.stroke(rectToFill)
+            ctx.setStrokeColor(lineColor.cgColor)
+            ctx.setLineWidth(lineWidth)
+            ctx.stroke(rectToFill)
         }
     }
 }
@@ -298,16 +303,17 @@ class EllipseTool: SketchTool {
     }
 
     internal func draw() {
-        let context: CGContext = UIGraphicsGetCurrentContext()!
-        context.setAlpha(lineAlpha)
-        context.setLineWidth(lineWidth)
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }
+        
+        ctx.setAlpha(lineAlpha)
+        ctx.setLineWidth(lineWidth)
         let rectToFill = CGRect(x: firstPoint.x, y: firstPoint.y, width: lastPoint.x - self.firstPoint.x, height: lastPoint.y - firstPoint.y)
         if self.isFill {
-            context.setFillColor(lineColor.cgColor)
-            UIGraphicsGetCurrentContext()!.fillEllipse(in: rectToFill)
+            ctx.setFillColor(lineColor.cgColor)
+            ctx.fillEllipse(in: rectToFill)
         } else {
-            context.setStrokeColor(lineColor.cgColor)
-            UIGraphicsGetCurrentContext()!.strokeEllipse(in: rectToFill)
+            ctx.setStrokeColor(lineColor.cgColor)
+            ctx.strokeEllipse(in: rectToFill)
         }
     }
 }
@@ -337,11 +343,11 @@ class StarTool: SketchTool {
 
     internal func draw() {
         guard let ctx = UIGraphicsGetCurrentContext() else { return }
-
-        let rect = CGRect(  x: min(firstPoint.x,lastPoint.x),
-                            y: min(firstPoint.y,lastPoint.y),
-                            width: abs(firstPoint.x - lastPoint.x),
-                            height: abs(firstPoint.y - lastPoint.y))
+        
+        let rect = CGRect(x: min(firstPoint.x, lastPoint.x),
+                          y: min(firstPoint.y, lastPoint.y),
+                          width: abs(firstPoint.x - lastPoint.x),
+                          height: abs(firstPoint.y - lastPoint.y))
 
         let pathRef = CGMutablePath()
         pathRef.move(to: CGPoint(x: 98.582, y: 495))
@@ -356,11 +362,9 @@ class StarTool: SketchTool {
         pathRef.addLine(to: CGPoint(x: 250, y: 411.298))
         pathRef.closeSubpath()
 
-
-        var s = CGAffineTransform(scaleX: rect.width / 500.0 ,y: rect.height / 500.0)
+        var s = CGAffineTransform(scaleX: rect.width / 500.0, y: rect.height / 500.0)
         var a = CGAffineTransform(translationX: rect.minX, y: rect.minY)
         guard let pathRefTrans  = pathRef.copy(using: &s)?.copy(using: &a) else { return }
-
 
         ctx.setLineWidth(lineWidth)
         ctx.setAlpha(lineAlpha)
@@ -399,19 +403,18 @@ class StampTool: SketchTool {
     func getStamImage() -> UIImage? {
         return stampImage
     }
-
+    
     func draw() {
-        let context: CGContext = UIGraphicsGetCurrentContext()!
-        context.setShadow(offset: CGSize(width :0, height: 0), blur: 0, color: nil)
-
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }
+        ctx.setShadow(offset: CGSize(width :0, height: 0), blur: 0, color: nil)
+        
         if let image = self.getStamImage() {
             let imageX = touchPoint.x  - (image.size.width / 2.0)
             let imageY = touchPoint.y - (image.size.height / 2.0)
             let imageWidth = image.size.width
             let imageHeight = image.size.height
-
+            
             image.draw(in: CGRect(x: imageX, y: imageY, width: imageWidth, height: imageHeight))
         }
     }
 }
-

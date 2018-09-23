@@ -312,6 +312,61 @@ class EllipseTool: SketchTool {
     }
 }
 
+class StarTool: SketchTool {
+    var lineWidth: CGFloat
+    var lineColor: UIColor
+    var lineAlpha: CGFloat
+    var firstPoint: CGPoint
+    var lastPoint: CGPoint
+
+    init() {
+        lineWidth = 0
+        lineColor = .blue
+        lineAlpha = 0
+        firstPoint = CGPoint(x: 0, y: 0)
+        lastPoint = CGPoint(x: 0, y: 0)
+    }
+
+    internal func setInitialPoint(_ firstPoint: CGPoint) {
+        self.firstPoint = firstPoint
+    }
+
+    internal func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {
+        lastPoint = endPoint
+    }
+
+    internal func draw() {
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }
+
+        let rect = CGRect(  x: min(firstPoint.x,lastPoint.x),
+                            y: min(firstPoint.y,lastPoint.y),
+                            width: abs(firstPoint.x - lastPoint.x),
+                            height: abs(firstPoint.y - lastPoint.y))
+        ctx.translateBy(x: rect.minX, y: rect.minY)
+        let scalefactor:CGFloat = min(rect.width / 500.0 , rect.height / 500.0)
+        ctx.scaleBy(x: scalefactor,y:scalefactor)
+
+        let pathRef = CGMutablePath()
+        pathRef.move(to: CGPoint(x: 98.582, y: 495))
+        pathRef.addLine(to: CGPoint(x: 127.5, y: 317.716))
+        pathRef.addLine(to: CGPoint(x: 5, y: 192.163))
+        pathRef.addLine(to: CGPoint(x: 174.291, y: 166.298))
+        pathRef.addLine(to: CGPoint(x: 250, y: 5))
+        pathRef.addLine(to: CGPoint(x: 325.709, y: 166.298))
+        pathRef.addLine(to: CGPoint(x: 495, y: 192.163))
+        pathRef.addLine(to: CGPoint(x: 372.5, y: 317.716))
+        pathRef.addLine(to: CGPoint(x: 401.418, y: 495))
+        pathRef.addLine(to: CGPoint(x: 250, y: 411.298))
+        pathRef.closeSubpath()
+
+        ctx.setLineWidth(lineWidth)
+        ctx.setAlpha(lineAlpha)
+        ctx.setStrokeColor(lineColor.cgColor)
+        ctx.addPath(pathRef)
+        ctx.strokePath()
+    }
+}
+
 class StampTool: SketchTool {
     var lineWidth: CGFloat
     var lineColor: UIColor
@@ -356,3 +411,4 @@ class StampTool: SketchTool {
         }
     }
 }
+

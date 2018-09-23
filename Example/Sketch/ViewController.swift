@@ -149,6 +149,10 @@ extension ViewController {
         let ellipseFillAction = UIAlertAction(title: "Ellipse(Fill)", style: .default) { _ in
             self.sketchView.drawTool = .ellipseFill
         }
+        // Star
+        let starAction = UIAlertAction(title: "Star platinum", style: .default) { _ in
+            self.sketchView.drawTool = .star
+        }
         // Cancel
         let cancelAction = UIAlertAction(title: "Cancel", style: .default) { _ in }
 
@@ -159,6 +163,7 @@ extension ViewController {
         alertController.addAction(rectFillAction)
         alertController.addAction(ellipseAction)
         alertController.addAction(ellipseFillAction)
+        alertController.addAction(starAction)
         alertController.addAction(cancelAction)
 
         present(alertController, animated: true, completion: nil)

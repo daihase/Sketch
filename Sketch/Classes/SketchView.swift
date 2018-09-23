@@ -18,6 +18,7 @@ public enum SketchToolType {
     case ellipseStroke
     case ellipseFill
     case stamp
+    case star
 }
 
 public enum ImageRenderingMode {
@@ -135,6 +136,8 @@ public class SketchView: UIView {
             let ellipseTool = EllipseTool()
             ellipseTool.isFill = true
             return ellipseTool
+        case .star:
+            return StarTool()
         }
     }
 

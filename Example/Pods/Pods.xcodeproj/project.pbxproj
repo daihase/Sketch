@@ -310,8 +310,8 @@
 		F4C7D6328493B73EF741AC61F4CEF01E /* QuickSelectedTestSuiteBuilder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QuickSelectedTestSuiteBuilder.swift; path = Sources/Quick/QuickSelectedTestSuiteBuilder.swift; sourceTree = "<group>"; };
 		F603A4E0D7EC515AB335E0724AE5B526 /* Pods-Sketch_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Sketch_Tests-dummy.m"; sourceTree = "<group>"; };
 		FB0CB8A707F76F1FA151654E153CF1C7 /* Pods_Sketch_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Sketch_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		FCDC73182078E2E60077A9B5 /* SketchTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SketchTool.swift; sourceTree = "<group>"; };
-		FCDC73192078E2E60077A9B5 /* SketchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SketchView.swift; sourceTree = "<group>"; };
+		FCDC73182078E2E60077A9B5 /* SketchTool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SketchTool.swift; sourceTree = "<group>"; usesTabs = 0; };
+		FCDC73192078E2E60077A9B5 /* SketchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SketchView.swift; sourceTree = "<group>"; usesTabs = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

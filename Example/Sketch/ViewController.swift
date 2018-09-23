@@ -236,6 +236,6 @@ extension ViewController {
     }
 
     func tapFillButton() {
-        print("tapFillButton")
+       sketchView.drawTool = .fill
     }
 }

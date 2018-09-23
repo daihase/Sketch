@@ -377,6 +377,17 @@ class FillTool: SketchTool {
     func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {}
 
     func draw() {
+        guard let context: CGContext = UIGraphicsGetCurrentContext() else { print("[ERROR] UIGraphicsGetCurrentContext");return }
 
+        guard let cgimg = context.makeImage() else { return  }
+        let ptinImg = CGPoint(x: touchPoint.x * UIScreen.main.scale, y: touchPoint.y * UIScreen.main.scale)
+        let img = UIImage(cgImage: cgimg)
+        if let imgFilled = img.fill(pt: ptinImg, color: lineColor, colorCompare: nil,processing: nil) {
+            imgFilled.draw(in: CGRect(x: 0,
+                                      y: 0,
+                                      width: CGFloat(context.width) / UIScreen.main.scale,
+                                      height: CGFloat(context.height) / UIScreen.main.scale))
+        }
     }
+
 }

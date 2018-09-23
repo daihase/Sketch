@@ -26,8 +26,7 @@ struct ARGB8 {
 }
 
 extension UIImage {
-    func fill(pt: CGPoint, color: UIColor, colorCompare: ((ARGB8, ARGB8) -> Bool)?,
-              processing: ((UIImage) -> Void)?) -> UIImage? {
+    func fill(pt: CGPoint, color: UIColor, colorCompare: ((ARGB8, ARGB8) -> Bool)?) -> UIImage? {
 
         guard let cgImage = self.cgImage else { return nil }
         let colorSpace = CGColorSpaceCreateDeviceRGB()
@@ -143,14 +142,6 @@ extension UIImage {
                 ptrUint8[pos + 2] = fillARGB.g
                 ptrUint8[pos + 3] = fillARGB.b
 
-                if let processing = processing {
-                    if (cnt % 20 == 0) {
-                        if let newcgImg = ctx.makeImage() {
-                            let img = UIImage(cgImage: newcgImg)
-                            processing( img )
-                        }
-                    }
-                }
                 cnt += 1
             }
         }
@@ -159,7 +150,7 @@ extension UIImage {
         return UIImage(cgImage: newcgImg)
     }
 
-    func diffColorBasic(base: ARGB8, target: ARGB8) -> Bool {
+    private func diffColorBasic(base: ARGB8, target: ARGB8) -> Bool {
         let diffR = abs(Int(base.r) - Int(target.r))
         let diffG = abs(Int(base.g) - Int(target.g))
         let diffB = abs(Int(base.b) - Int(target.b))

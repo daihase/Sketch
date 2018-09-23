@@ -234,4 +234,8 @@ extension ViewController {
             }
         }
     }
+
+    func tapFillButton() {
+        print("tapFillButton")
+    }
 }

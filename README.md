@@ -22,12 +22,12 @@ Sketch has the basic functions for drawing from the beginning. Anyone can easily
 - [x] Multiple colors can be set
 - [x] Multiple width can be set
 - [x] Multiple alpha can be set
-- [x] Multiple tools (Line, Arrow, Rectangle, Ellipse)
+- [x] Multiple tools (Line, Arrow, Rectangle, Ellipse, Star)
 - [x] Multiple Pen Filters (Neon, Blur)
 
 ## :pencil2: Requirements
 - Xcode 9.0+
-- Swift 4.0+
+- Swift 4.0+ (**Swift 4.2 is ready** :thumbsup:)
 
 ## :pencil2: Installation
 

@@ -418,3 +418,38 @@ class StampTool: SketchTool {
         }
     }
 }
+
+class FillTool: SketchTool {
+    var lineWidth: CGFloat
+    var lineColor: UIColor
+    var lineAlpha: CGFloat
+    var touchPoint: CGPoint
+
+    init() {
+        lineWidth = 0
+        lineColor = .blue
+        lineAlpha = 0
+        touchPoint = CGPoint(x: 0, y: 0)
+    }
+
+    func setInitialPoint(_ firstPoint: CGPoint) {
+        touchPoint = firstPoint
+    }
+
+    func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {}
+
+    func draw() {
+        guard let context: CGContext = UIGraphicsGetCurrentContext() else { print("[ERROR] UIGraphicsGetCurrentContext");return }
+
+        guard let cgimg = context.makeImage() else { return  }
+        let ptinImg = CGPoint(x: touchPoint.x * UIScreen.main.scale, y: touchPoint.y * UIScreen.main.scale)
+        let img = UIImage(cgImage: cgimg)
+        if let imgFilled = img.fill(pt: ptinImg, color: lineColor, colorCompare: nil) {
+            imgFilled.draw(in: CGRect(x: 0,
+                                      y: 0,
+                                      width: CGFloat(context.width) / UIScreen.main.scale,
+                                      height: CGFloat(context.height) / UIScreen.main.scale))
+        }
+    }
+
+}

@@ -93,6 +93,10 @@ extension ViewController {
 
         present(alertController, animated: true, completion: nil)
     }
+    
+    func tapFillButton() {
+        sketchView.drawTool = .fill
+    }
 
     func tapStampButton() {
         // Heart

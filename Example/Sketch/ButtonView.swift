@@ -15,6 +15,7 @@ protocol ButtonViewInterface: class {
     func tapRedoButton()
     func tapClearButton()
     func tapPaletteButton()
+    func tapFillButton()
     func tapStampButton()
     func tapFigureButton()
     func tapFilterButton()
@@ -66,6 +67,11 @@ class ButtonView: UIView {
     // Tap Palette Button
     @IBAction func tapPaletteButton(_ sender: Any) {
         delegate?.tapPaletteButton()
+    }
+    
+    // Tap Fill Button
+    @IBAction func tapFillButton(_ sender: Any) {
+        delegate?.tapFillButton()
     }
     
     // Tap Stamp Button

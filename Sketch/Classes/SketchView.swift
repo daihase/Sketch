@@ -11,13 +11,13 @@ import UIKit
 public enum SketchToolType {
     case pen
     case eraser
+    case stamp
     case line
     case arrow
     case rectangleStroke
     case rectangleFill
     case ellipseStroke
     case ellipseFill
-    case stamp
     case star
     case fill
 }

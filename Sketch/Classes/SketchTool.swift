@@ -439,7 +439,7 @@ class FillTool: SketchTool {
     func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {}
 
     func draw() {
-        guard let context: CGContext = UIGraphicsGetCurrentContext() else { print("[ERROR] UIGraphicsGetCurrentContext");return }
+        guard let context: CGContext = UIGraphicsGetCurrentContext() else { print("[ERROR] UIGraphicsGetCurrentContext"); return }
 
         guard let cgimg = context.makeImage() else { return  }
         let ptinImg = CGPoint(x: touchPoint.x * UIScreen.main.scale, y: touchPoint.y * UIScreen.main.scale)
@@ -451,5 +451,4 @@ class FillTool: SketchTool {
                                       height: CGFloat(context.height) / UIScreen.main.scale))
         }
     }
-
 }

@@ -11,7 +11,10 @@
 
 Sketch has the basic functions for drawing from the beginning. Anyone can easily create drawing iOS Applications.
 
-![Sketch_animation1](https://raw.github.com/wiki/daihase/resource_manage/gifs/sketch-animation.gif)
+※ Below is the image of [app](https://itunes.apple.com/us/app/doodle-maker--paint%20and%20draw-/id1185784566?mt=8) actually made using Sketch.
+
+![Sketch_animation1](https://raw.github.com/wiki/daihase/resource_manage/gifs/sketch-animation-1.gif)
+![Sketch_animation2](https://raw.github.com/wiki/daihase/resource_manage/gifs/sketch-animation-2.gif)
 
 ## :memo: Features
 - [x] Pen tool

@@ -17,6 +17,7 @@ Sketch has the basic functions for drawing from the beginning. Anyone can easily
 - [x] Pen tool
 - [x] Eraser tool
 - [x] Stamp tool
+- [x] Fill
 - [x] Undo / Redo
 - [x] Draw on Camera / Gallery image
 - [x] Multiple colors can be set
@@ -67,11 +68,12 @@ import Sketch
 **2.** Create `SketchView`, and addSubview to the view you want to set.
 
 ```Swift
-let sketchView = SketchView(frame: CGRect(
-  x: 0,
-  y: 0,
-  width: UIScreen.main.bounds.width,
-  height: UIScreen.main.bounds.height)
+let sketchView = SketchView(frame:
+    CGRect(x: 0,
+           y: 0,
+           width: UIScreen.main.bounds.width,
+           height: UIScreen.main.bounds.height
+    )
 )
 
 self.view.addSubview(sketchView)

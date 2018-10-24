@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina6_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iLe-2C-NT3" userLabel="Eraser">
-                    <rect key="frame" x="60" y="0.0" width="50" height="50"/>
+                    <rect key="frame" x="26" y="44" width="224" height="224"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="iLe-2C-NT3" secondAttribute="height" multiplier="1:1" id="99Q-2x-0FI"/>
                     </constraints>
@@ -27,7 +27,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vue-Y2-COy" userLabel="Pen">
-                    <rect key="frame" x="5" y="0.0" width="50" height="50"/>
+                    <rect key="frame" x="5" y="0.0" width="16" height="16"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="Vue-Y2-COy" secondAttribute="height" multiplier="1:1" id="RbR-gD-ISi"/>
                     </constraints>
@@ -37,7 +37,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="czJ-mb-Vl1" userLabel="Redo">
-                    <rect key="frame" x="170" y="0.0" width="50" height="50"/>
+                    <rect key="frame" x="302" y="44" width="6" height="6"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="czJ-mb-Vl1" secondAttribute="height" multiplier="1:1" id="OUp-fP-Ssf"/>
                         <constraint firstAttribute="width" secondItem="czJ-mb-Vl1" secondAttribute="height" multiplier="1:1" id="YrP-MA-Cyn"/>
@@ -48,7 +48,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fWc-Gd-SRf" userLabel="Clear">
-                    <rect key="frame" x="225" y="0.0" width="50" height="50"/>
+                    <rect key="frame" x="313" y="0.0" width="16" height="16"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="fWc-Gd-SRf" secondAttribute="height" multiplier="1:1" id="MyH-rL-BVX"/>
                     </constraints>
@@ -58,7 +58,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QZg-fK-eZE">
-                    <rect key="frame" x="280" y="0.0" width="50" height="50"/>
+                    <rect key="frame" x="334" y="44" width="400" height="400"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="QZg-fK-eZE" secondAttribute="height" multiplier="1:1" id="Ngo-Jh-Pmr"/>
                     </constraints>
@@ -68,7 +68,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DzJ-Or-GLT">
-                    <rect key="frame" x="440" y="0.0" width="50" height="50"/>
+                    <rect key="frame" x="1186" y="44" width="400" height="400"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="DzJ-Or-GLT" secondAttribute="height" multiplier="1:1" id="vv5-bi-aV6"/>
                     </constraints>
@@ -78,7 +78,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rnG-cl-0U1">
-                    <rect key="frame" x="495" y="0.0" width="50" height="50"/>
+                    <rect key="frame" x="1591" y="44" width="400" height="400"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="rnG-cl-0U1" secondAttribute="height" multiplier="1:1" id="wVO-FB-vdG"/>
                     </constraints>
@@ -88,7 +88,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UuW-3G-hcX">
-                    <rect key="frame" x="550" y="0.0" width="50" height="50"/>
+                    <rect key="frame" x="1996" y="44" width="42" height="42"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="UuW-3G-hcX" secondAttribute="height" multiplier="1:1" id="Ydu-dZ-3OS"/>
                     </constraints>
@@ -98,7 +98,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TaI-V6-jIs">
-                    <rect key="frame" x="330" y="0.0" width="50" height="50"/>
+                    <rect key="frame" x="734" y="44" width="42" height="42"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="TaI-V6-jIs" secondAttribute="height" multiplier="1:1" id="6lL-5n-Nba"/>
                     </constraints>
@@ -108,7 +108,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UIj-xL-iBe">
-                    <rect key="frame" x="385" y="0.0" width="50" height="50"/>
+                    <rect key="frame" x="781" y="44" width="400" height="400"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="UIj-xL-iBe" secondAttribute="height" multiplier="1:1" id="PcI-aQ-08R"/>
                     </constraints>
@@ -118,7 +118,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pct-JJ-fLS">
-                    <rect key="frame" x="115" y="0.0" width="50" height="50"/>
+                    <rect key="frame" x="255" y="44" width="42" height="42"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="pct-JJ-fLS" secondAttribute="height" multiplier="1:1" id="USc-XN-eoQ"/>
                     </constraints>
@@ -169,16 +169,16 @@
         </view>
     </objects>
     <resources>
-        <image name="Camera" width="48" height="48"/>
-        <image name="Clear" width="48" height="48"/>
-        <image name="Eraser" width="48" height="48"/>
-        <image name="Figure" width="48" height="48"/>
-        <image name="Fill" width="48" height="48"/>
-        <image name="Filter" width="48" height="48"/>
-        <image name="Palette" width="48" height="48"/>
-        <image name="Pen" width="48" height="48"/>
-        <image name="Redo" width="48" height="48"/>
-        <image name="Stamp" width="48" height="48"/>
-        <image name="Undo" width="48" height="48"/>
+        <image name="Camera" width="42.666667938232422" height="42.666667938232422"/>
+        <image name="Clear" width="307.20001220703125" height="307.20001220703125"/>
+        <image name="Eraser" width="224.78048706054688" height="224.78048706054688"/>
+        <image name="Figure" width="400.69564819335938" height="400.69564819335938"/>
+        <image name="Fill" width="42.666667938232422" height="42.666667938232422"/>
+        <image name="Filter" width="400.69564819335938" height="400.69564819335938"/>
+        <image name="Palette" width="400.69564819335938" height="400.69564819335938"/>
+        <image name="Pen" width="400.69564819335938" height="400.69564819335938"/>
+        <image name="Redo" width="42.666667938232422" height="42.666667938232422"/>
+        <image name="Stamp" width="400.69564819335938" height="400.69564819335938"/>
+        <image name="Undo" width="42.082191467285156" height="42.082191467285156"/>
     </resources>
 </document>

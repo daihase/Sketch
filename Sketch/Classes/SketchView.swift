@@ -147,6 +147,10 @@ public class SketchView: UIView {
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
 
+        if currentTool != nil {
+            finishDrawing()
+        }
+
         previousPoint1 = touch.previousLocation(in: self)
         currentPoint = touch.location(in: self)
         currentTool = toolWithCurrentSettings()

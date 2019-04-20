@@ -158,6 +158,8 @@ public class SketchView: UIView {
         currentTool?.lineColor = lineColor
         currentTool?.lineAlpha = lineAlpha
 
+        sketchViewDelegate?.drawView?(self, willBeginDrawUsingTool: currentTool! as AnyObject)
+        
         switch currentTool! {
         case is PenTool:
             guard let penTool = currentTool as? PenTool else { return }

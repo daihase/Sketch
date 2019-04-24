@@ -147,6 +147,10 @@ public class SketchView: UIView {
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
 
+        if currentTool != nil {
+            finishDrawing()
+        }
+
         previousPoint1 = touch.previousLocation(in: self)
         currentPoint = touch.location(in: self)
         currentTool = toolWithCurrentSettings()
@@ -154,6 +158,8 @@ public class SketchView: UIView {
         currentTool?.lineColor = lineColor
         currentTool?.lineAlpha = lineAlpha
 
+        sketchViewDelegate?.drawView?(self, willBeginDrawUsingTool: currentTool! as AnyObject)
+        
         switch currentTool! {
         case is PenTool:
             guard let penTool = currentTool as? PenTool else { return }

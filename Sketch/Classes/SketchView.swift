@@ -101,7 +101,12 @@ public class SketchView: UIView {
                 }
             }
         } else {
-            image?.draw(at: .zero)
+            switch drawMode {
+            case .original:
+                image?.draw(at: .zero)
+              case .scale:
+                image?.draw(in: self.bounds)
+            }
             currentTool?.draw()
         }
 
@@ -230,8 +235,9 @@ public class SketchView: UIView {
         setNeedsDisplay()
     }
 
-    public func loadImage(image: UIImage) {
+    public func loadImage(image: UIImage, drawMode: ImageRenderingMode = .original) {
         self.image = image
+        self.drawMode = drawMode
         backgroundImage =  image.copy() as? UIImage
         bufferArray.removeAllObjects()
         pathArray.removeAllObjects()

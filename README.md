@@ -6,6 +6,7 @@
 [![License](https://img.shields.io/cocoapods/l/Sketch.svg?style=flat)](http://cocoapods.org/pods/Sketch)
 [![Language: Swift 5.0](https://img.shields.io/badge/swift-5.0-4BC51D.svg?style=flat)](https://developer.apple.com/swift)
 [![CocoaPods](https://img.shields.io/badge/Cocoa%20Pods-✓-4BC51D.svg?style=flat)](https://cocoapods.org/pods/Sketch)
+[![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 Sketch has the basic functions for drawing from the beginning. Anyone can easily create drawing iOS Applications.
 
@@ -43,7 +44,24 @@ it, simply add the following line to your Podfile:
 pod 'Sketch'
 ```
 
-And run  `pod install`
+And run this command:
+```ruby
+ `pod install`
+ ```
+
+#### Using [Carthage](https://github.com/Carthage/Carthage)
+
+Add this to Cartfile:
+```ruby
+github "daihase/Sketch"
+```
+
+Then run this command:
+```ruby
+$ carthage update
+```
+
+Finally, add the framework:
 
 
 ## :pencil2: How to use

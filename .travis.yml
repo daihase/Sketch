@@ -3,12 +3,7 @@
 # * https://github.com/supermarin/xcpretty#usage
 
 osx_image:
-- xcode10.3
 - xcode11.1
-
-env:
-- DESTINATION='platform=iOS Simulator,name=iPhone 8' SWIFT_VERSION=5.0
-- DESTINATION='platform=iOS Simulator,name=iPhone 8' SWIFT_VERSION=4.2
 
 language: swift
 
@@ -21,4 +16,5 @@ branches:
     - master
 
 script:
+- xcodebuild -scheme ios-travis -sdk iphonesimulator -destination 'latform=iOS Simulator,name=iPhone X,OS=12.1' build test
 - pod lib lint --allow-warnings

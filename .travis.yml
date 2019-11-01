@@ -3,7 +3,7 @@
 # * https://github.com/supermarin/xcpretty#usage
 
 osx_image:
-- xcode11.1
+- xcode9.2
 
 language: swift
 
@@ -16,5 +16,5 @@ branches:
     - master
 
 script:
-- xcodebuild -scheme ios-travis -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone X,OS=12.1' build test
+- xcodebuild -scheme ios-travis -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=10.1,name=iPhone 7' -configuration Debug test | xcpretty -c
 - pod lib lint --allow-warnings

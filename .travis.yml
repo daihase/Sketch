@@ -16,5 +16,5 @@ branches:
     - master
 
 script:
-- xcodebuild -scheme ios-travis -sdk iphonesimulator -destination 'latform=iOS Simulator,name=iPhone X,OS=12.1' build test
+- xcodebuild -scheme ios-travis -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone X,OS=12.1' build test
 - pod lib lint --allow-warnings

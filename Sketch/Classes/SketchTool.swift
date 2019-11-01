@@ -198,7 +198,7 @@ class ArrowTool: SketchTool {
         let capHeight = lineWidth * 4.0
         let angle = angleWithFirstPoint(first: firstPoint, second: lastPoint)
         var point1 = pointWithAngle(angle: CGFloat(angle + Float(6.0 * .pi / 8.0)), distance: capHeight)
-        var point2 = pointWithAngle(angle:  CGFloat(angle - Float(6.0 * .pi / 8.0)), distance: capHeight)
+        var point2 = pointWithAngle(angle: CGFloat(angle - Float(6.0 * .pi / 8.0)), distance: capHeight)
         let endPointOffset = pointWithAngle(angle: CGFloat(angle), distance: lineWidth)
 
         ctx.setStrokeColor(lineColor.cgColor)

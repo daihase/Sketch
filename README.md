@@ -2,7 +2,6 @@
 <img src="Documents/Sketch.png" width: 100% height: 100% alt="Sketch Logo">
 </div>
 
-[![Build Status](https://travis-ci.org/daihase/Sketch.svg?branch=master)](https://travis-ci.org/daihase/Sketch)
 ![platforms](https://img.shields.io/badge/platforms-iOS-333333.svg)
 [![License](https://img.shields.io/cocoapods/l/Sketch.svg?style=flat)](http://cocoapods.org/pods/Sketch)
 [![Language: Swift 5.0](https://img.shields.io/badge/swift-5.0-4BC51D.svg?style=flat)](https://developer.apple.com/swift)

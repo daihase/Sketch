@@ -46,7 +46,7 @@ pod 'Sketch'
 
 And run this command:
 ```ruby
- `pod install`
+$ pod install
  ```
 
 #### Using [Carthage](https://github.com/Carthage/Carthage)

@@ -2,13 +2,15 @@
 # * http://www.objc.io/issue-6/travis-ci.html
 # * https://github.com/supermarin/xcpretty#usage
 
-osx_image: xcode10.2
+osx_image:
+- xcode10.3
+- xcode11.1
 
 env:
 - DESTINATION='platform=iOS Simulator,name=iPhone 8' SWIFT_VERSION=5.0
 - DESTINATION='platform=iOS Simulator,name=iPhone 8' SWIFT_VERSION=4.2
 
-language: objective-c
+language: swift
 
 xcode_project: Sketch.xcodeproj
 

@@ -5,7 +5,7 @@
 [![Build Status](https://travis-ci.org/daihase/Sketch.svg?branch=master)](https://travis-ci.org/daihase/Sketch)
 ![platforms](https://img.shields.io/badge/platforms-iOS-333333.svg)
 [![License](https://img.shields.io/cocoapods/l/Sketch.svg?style=flat)](http://cocoapods.org/pods/Sketch)
-[![Language: Swift 4.0](https://img.shields.io/badge/swift-4.0-4BC51D.svg?style=flat)](https://developer.apple.com/swift)
+[![Language: Swift 5.0](https://img.shields.io/badge/swift-5.0-4BC51D.svg?style=flat)](https://developer.apple.com/swift)
 [![CocoaPods](https://img.shields.io/badge/Cocoa%20Pods-✓-4BC51D.svg?style=flat)](https://cocoapods.org/pods/Sketch)
 
 Sketch has the basic functions for drawing from the beginning. Anyone can easily create drawing iOS Applications.
@@ -31,7 +31,7 @@ Sketch has the basic functions for drawing from the beginning. Anyone can easily
 
 ## :pencil2: Requirements
 - Xcode 9.0+
-- Swift 4.0+ (**Swift 4.2 is ready** :thumbsup:)
+- Swift 4.0+ (**Swift 5 is ready** :thumbsup:)
 
 ## :pencil2: Installation
 

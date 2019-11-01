@@ -3,7 +3,7 @@ Pod::Spec.new do |spec|
   spec.version      = '3.0'
   spec.license      = 'MIT'
   spec.homepage     = 'https://github.com/daihase/Sketch'
-  spec.authors      = { 'daihase' => 'vermouth.6969@gmail.com' }
+  spec.authors      = { 'daihase' => 'daisuke_hasegawa@librastudio.co.jp' }
   spec.summary      = 'Just placing, anyone can make drawing application.'
   spec.source       = { :git => 'https://github.com/daihase/Sketch.git', :tag => spec.version.to_s }
 	spec.swift_version = [5.0]

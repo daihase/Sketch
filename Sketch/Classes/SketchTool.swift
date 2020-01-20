@@ -71,7 +71,7 @@ class PenTool: UIBezierPath, SketchTool {
     
     func draw() {
         guard let ctx = UIGraphicsGetCurrentContext() else { return }
-        
+        ctx.setShouldAntialias(false)
         switch drawingPenType {
         case .normal:
             ctx.addPath(path)
@@ -107,7 +107,7 @@ class PenTool: UIBezierPath, SketchTool {
 class EraserTool: PenTool {
     override func draw() {
         guard let ctx = UIGraphicsGetCurrentContext() else { return }
-        
+        ctx.setShouldAntialias(false)
         ctx.saveGState()
         ctx.addPath(path)
         ctx.setLineCap(.round)

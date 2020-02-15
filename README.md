@@ -8,7 +8,7 @@
 [![CocoaPods](https://img.shields.io/badge/Cocoa%20Pods-✓-4BC51D.svg?style=flat)](https://cocoapods.org/pods/Sketch)
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-Sketch has the basic functions for drawing from the beginning. Anyone can easily create drawing iOS Applications.
+Sketch has basic functions for drawing from the beginning. Anyone can easily create drawing iOS Applications.
 
 ※ Below is the image of [app](https://itunes.apple.com/us/app/doodle-maker--paint%20and%20draw-/id1185784566?mt=8) actually made using Sketch.
 

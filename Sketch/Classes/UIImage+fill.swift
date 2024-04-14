@@ -86,7 +86,7 @@ extension UIImage {
 
             // fill right and check upper,lower line start pos.
             var isUpperStarted: Bool = false
-            var isLowwerStarted: Bool = false
+            var isLowerStarted: Bool = false
             while ( ptProcX < width ) {
                 let pos: Int = ptProcX * 4 + ptProcY * bytesPerRow
                 let ptProcARGB = ARGB8(a: ptrUint8[pos], r: ptrUint8[pos + 1], g: ptrUint8[pos + 2], b: ptrUint8[pos + 3])
@@ -115,21 +115,21 @@ extension UIImage {
                     }
                 }
 
-                // check lowwer line
+                // check lower line
                 if ( ptProcY < height - 1 ) {
                     let pos: Int = ptProcX * 4 + (ptProcY + 1) * bytesPerRow
                     let ptProcARGB = ARGB8(a: ptrUint8[pos], r: ptrUint8[pos + 1], g: ptrUint8[pos + 2], b: ptrUint8[pos + 3])
 
                     let diff = colorCompare(ptARGB, ptProcARGB)
                     if ( diff ) {
-                        if (isLowwerStarted) {
-                            isLowwerStarted = false
+                        if (isLowerStarted) {
+                            isLowerStarted = false
                         }
                     }
                     else { // same
-                        if (!isLowwerStarted) {
-                            procPts.append(CGPoint(x: ptProcX, y: ptProcY + 1)) // lowwer
-                            isLowwerStarted = true
+                        if (!isLowerStarted) {
+                            procPts.append(CGPoint(x: ptProcX, y: ptProcY + 1)) // lower
+                            isLowerStarted = true
                         }
                     }
                 }

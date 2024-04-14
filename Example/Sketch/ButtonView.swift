@@ -49,7 +49,7 @@ class ButtonView: UIView {
         delegate?.tapEraserButton()
     }
     
-    // Tap Undo Buddon
+    // Tap Undo Button
     @IBAction func tapUndoButton(_ sender: Any) {
         delegate?.tapUndoButton()
     }

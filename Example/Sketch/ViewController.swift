@@ -223,7 +223,7 @@ extension ViewController {
             switch result {
             case .success(let image):
                 self?.sketchView.loadImage(image: image)
-            case .faild:
+            case .failed:
                 print("failed")
             case .cancel:
                 break
@@ -236,7 +236,7 @@ extension ViewController {
             switch result {
             case .success(let image):
                 self?.sketchView.loadImage(image: image)
-            case .faild:
+            case .failed:
                 print("failed")
             case .cancel:
                 break

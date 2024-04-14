@@ -11,7 +11,7 @@ import UIKit
 
 enum PhotoRequestResult {
     case success(UIImage)
-    case faild(PhotoAuthorizedErrorType)
+    case failed(PhotoAuthorizedErrorType)
     case cancel
 }
 
@@ -35,7 +35,7 @@ final class PhotoRequestManager: NSObject, UIImagePickerControllerDelegate, UINa
     
     private func requestPhoto(_ parentViewController: UIViewController, sourceType: UIImagePickerController.SourceType , completion: PhotoResquestCompletion?) {
         if !UIImagePickerController.isSourceTypeAvailable(sourceType) {
-            completion?(PhotoRequestResult.faild(.denied))
+            completion?(PhotoRequestResult.failed(.denied))
             return
         }
         
@@ -51,7 +51,7 @@ final class PhotoRequestManager: NSObject, UIImagePickerControllerDelegate, UINa
                 
                 parentViewController.present(imagePickerController, animated: true, completion: nil)
             case .error(let error):
-                completion?(PhotoRequestResult.faild(error))
+                completion?(PhotoRequestResult.failed(error))
             }
         }
         

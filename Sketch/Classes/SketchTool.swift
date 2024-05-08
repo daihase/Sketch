@@ -47,9 +47,9 @@ class PenTool: UIBezierPath, SketchTool {
 
     func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {}
 
-    func createBezierRenderingBox(_ previousPoint2: CGPoint, widhPreviousPoint previousPoint1: CGPoint, withCurrentPoint cpoint: CGPoint) -> CGRect {
+    func createBezierRenderingBox(_ previousPoint2: CGPoint, withPreviousPoint previousPoint1: CGPoint, withCurrentPoint cgPoint: CGPoint) -> CGRect {
         let mid1 = middlePoint(previousPoint1, previousPoint2: previousPoint2)
-        let mid2 = middlePoint(cpoint, previousPoint2: previousPoint1)
+        let mid2 = middlePoint(cgPoint, previousPoint2: previousPoint1)
         let subpath = CGMutablePath.init()
 
         subpath.move(to: CGPoint(x: mid1.x, y: mid1.y))
@@ -400,7 +400,7 @@ class StampTool: SketchTool {
         }
     }
 
-    func getStamImage() -> UIImage? {
+    func getStampImage() -> UIImage? {
         return stampImage
     }
     
@@ -408,7 +408,7 @@ class StampTool: SketchTool {
         guard let ctx = UIGraphicsGetCurrentContext() else { return }
         ctx.setShadow(offset: CGSize(width :0, height: 0), blur: 0, color: nil)
         
-        if let image = self.getStamImage() {
+        if let image = self.getStampImage() {
             let imageX = touchPoint.x  - (image.size.width / 2.0)
             let imageY = touchPoint.y - (image.size.height / 2.0)
             let imageWidth = image.size.width

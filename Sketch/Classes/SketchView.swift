@@ -191,7 +191,7 @@ public class SketchView: UIView {
         currentPoint = touch.location(in: self)
 
         if let penTool = currentTool as? PenTool {
-            let renderingBox = penTool.createBezierRenderingBox(previousPoint2!, widhPreviousPoint: previousPoint1!, withCurrentPoint: currentPoint!)
+            let renderingBox = penTool.createBezierRenderingBox(previousPoint2!, withPreviousPoint: previousPoint1!, withCurrentPoint: currentPoint!)
 
             setNeedsDisplay(renderingBox)
         } else {

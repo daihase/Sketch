@@ -11,31 +11,31 @@ import UIKit
 
 enum PhotoRequestResult {
     case success(UIImage)
-    case faild(PhotoAuthorizedErrorType)
+    case failed(PhotoAuthorizedErrorType)
     case cancel
 }
 
-typealias PhotoResquestCompletion = ((PhotoRequestResult) -> Void)
+typealias PhotoRequestCompletion = ((PhotoRequestResult) -> Void)
 
 final class PhotoRequestManager: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     fileprivate static let shared: PhotoRequestManager = PhotoRequestManager()
-    fileprivate var completionHandler: (PhotoResquestCompletion)?
+    fileprivate var completionHandler: (PhotoRequestCompletion)?
 
-    static func requestPhotoLibrary(_ parentViewController: UIViewController, completion: PhotoResquestCompletion?) {
+    static func requestPhotoLibrary(_ parentViewController: UIViewController, completion: PhotoRequestCompletion?) {
         shared.requestPhoto(parentViewController, sourceType: .photoLibrary, completion: completion)
     }
     
-    static func requestPhotoFromCamera(_ parentViewController: UIViewController, completion: PhotoResquestCompletion?) {
+    static func requestPhotoFromCamera(_ parentViewController: UIViewController, completion: PhotoRequestCompletion?) {
         shared.requestPhoto(parentViewController, sourceType: .camera, completion: completion)
     }
     
-    static func requestPhotoFromSavedPhotosAlbum(_ parentViewController: UIViewController, completion: PhotoResquestCompletion?) {
+    static func requestPhotoFromSavedPhotosAlbum(_ parentViewController: UIViewController, completion: PhotoRequestCompletion?) {
         shared.requestPhoto(parentViewController, sourceType: .savedPhotosAlbum, completion: completion)
     }
     
-    private func requestPhoto(_ parentViewController: UIViewController, sourceType: UIImagePickerController.SourceType , completion: PhotoResquestCompletion?) {
+    private func requestPhoto(_ parentViewController: UIViewController, sourceType: UIImagePickerController.SourceType , completion: PhotoRequestCompletion?) {
         if !UIImagePickerController.isSourceTypeAvailable(sourceType) {
-            completion?(PhotoRequestResult.faild(.denied))
+            completion?(PhotoRequestResult.failed(.denied))
             return
         }
         
@@ -51,7 +51,7 @@ final class PhotoRequestManager: NSObject, UIImagePickerControllerDelegate, UINa
                 
                 parentViewController.present(imagePickerController, animated: true, completion: nil)
             case .error(let error):
-                completion?(PhotoRequestResult.faild(error))
+                completion?(PhotoRequestResult.failed(error))
             }
         }
         

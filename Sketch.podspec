@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'Sketch'
-  spec.version      = '3.0'
+  spec.version      = '3.1'
   spec.license      = 'MIT'
   spec.homepage     = 'https://github.com/daihase/Sketch'
   spec.authors      = { 'daihase' => 'daisuke_hasegawa@librastudio.co.jp' }

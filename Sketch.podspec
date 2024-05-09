@@ -9,4 +9,5 @@ Pod::Spec.new do |spec|
 	spec.swift_version = '5.0'
   spec.ios.deployment_target = '9.3'
   spec.source_files = 'Sketch/Classes/**/*'
+  spec.resource_bundles = {"Sketch" => ["Sketch/PrivacyInfo.xcprivacy"]}
 end

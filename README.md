@@ -101,6 +101,11 @@ self.view.addSubview(sketchView)
 
 :ok_hand: Most of the functions are implemented in the Example Application. Please see that for details.
 
+## :pencil2: Privacy
+
+`Sketch` does not collect any data. A [privacy manifest file](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files) is [provided](Sketch/PrivacyInfo.xcprivacy).
+
+
 ## :pencil2: License
 
 I am using Example Application icon from Freepik.  :point_right: [Designed by Freepik and distributed by Flaticon](https://www.freepik.com/)

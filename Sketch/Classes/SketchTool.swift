@@ -419,6 +419,203 @@ class StampTool: SketchTool {
     }
 }
 
+class EditableStampTool: SketchTool {
+    var lineWidth: CGFloat
+    var lineColor: UIColor
+    var lineAlpha: CGFloat
+    var touchPoint: CGPoint
+    var stampImage: UIImage?
+    var isEditing: Bool
+    var transform: CGAffineTransform
+    var stampRect: CGRect
+    var originalSize: CGSize
+    
+    // リサイズ機能用の新しいプロパティ
+    var isResizing: Bool = false
+    var resizeStartPoint: CGPoint = .zero
+    var resizeStartScale: CGFloat = 1.0
+    
+    init() {
+        lineWidth = 0
+        lineColor = .blue
+        lineAlpha = 1.0
+        touchPoint = CGPoint(x: 0, y: 0)
+        isEditing = false
+        transform = .identity
+        stampRect = .zero
+        originalSize = .zero
+    }
+    
+    func setInitialPoint(_ firstPoint: CGPoint) {
+        touchPoint = firstPoint
+        calculateStampRect()
+    }
+    
+    func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {}
+    
+    func setStampImage(image: UIImage?) {
+        if let image = image {
+            stampImage = image
+            originalSize = image.size
+            calculateStampRect()
+        }
+    }
+    
+    func getStampImage() -> UIImage? {
+        return stampImage
+    }
+    
+    private func calculateStampRect() {
+        guard let image = stampImage else { return }
+        
+        let scaledSize = CGSize(
+            width: originalSize.width * abs(transform.a),
+            height: originalSize.height * abs(transform.d)
+        )
+        
+        stampRect = CGRect(
+            x: touchPoint.x - scaledSize.width / 2,
+            y: touchPoint.y - scaledSize.height / 2,
+            width: scaledSize.width,
+            height: scaledSize.height
+        )
+    }
+    
+    func contains(point: CGPoint) -> Bool {
+        let expandedRect = stampRect.insetBy(dx: -10, dy: -10)
+        return expandedRect.contains(point)
+    }
+    
+    func updateTransform(_ newTransform: CGAffineTransform) {
+        transform = newTransform
+        calculateStampRect()
+    }
+    
+    func updatePosition(_ newPosition: CGPoint) {
+        touchPoint = newPosition
+        calculateStampRect()
+    }
+    
+    // リサイズハンドルの領域を取得
+    func getResizeHandleRect() -> CGRect {
+        let handleSize: CGFloat = 24
+        return CGRect(
+            x: stampRect.maxX - handleSize/2,
+            y: stampRect.minY - handleSize/2,
+            width: handleSize,
+            height: handleSize
+        )
+    }
+    
+    // リサイズハンドルがタップされたかチェック
+    func isResizeHandleTapped(point: CGPoint) -> Bool {
+        return getResizeHandleRect().contains(point)
+    }
+    
+    // リサイズ開始
+    func startResize(at point: CGPoint) {
+        isResizing = true
+        resizeStartPoint = point
+        resizeStartScale = abs(transform.a) // 現在のスケール値
+    }
+    
+    // リサイズ処理
+    func updateResize(to point: CGPoint) {
+        guard isResizing else { return }
+           
+           let deltaX = point.x - resizeStartPoint.x
+           let scaleChange = deltaX / 30.0
+           // 最小値も外して完全に自由に
+           let newScale = resizeStartScale + scaleChange
+           
+           // ただし、負の値だけは避ける
+           if newScale > 0 {
+               transform = CGAffineTransform(scaleX: newScale, y: newScale)
+               calculateStampRect()
+           }
+    }
+    
+    // リサイズ終了
+    func endResize() {
+        isResizing = false
+    }
+    
+    func draw() {
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }
+        guard let image = stampImage else { return }
+        
+        ctx.saveGState()
+        ctx.setShadow(offset: CGSize(width: 0, height: 0), blur: 0, color: nil)
+        
+        ctx.translateBy(x: touchPoint.x, y: touchPoint.y)
+        ctx.concatenate(transform)
+        ctx.translateBy(x: -touchPoint.x, y: -touchPoint.y)
+        
+        let drawRect = CGRect(
+            x: touchPoint.x - originalSize.width / 2,
+            y: touchPoint.y - originalSize.height / 2,
+            width: originalSize.width,
+            height: originalSize.height
+        )
+        
+        image.draw(in: drawRect)
+        
+        ctx.restoreGState()
+        
+        if isEditing {
+            drawDashedBorder()
+        }
+    }
+    
+    private func drawDashedBorder() {
+        guard let ctx = UIGraphicsGetCurrentContext() else { return }
+        
+        let borderRect = stampRect.insetBy(dx: -5, dy: -5)
+        
+        ctx.saveGState()
+        ctx.setStrokeColor(UIColor.systemBlue.cgColor)
+        ctx.setLineWidth(2.0)
+        ctx.setLineDash(phase: 0, lengths: [8, 8])
+        ctx.stroke(borderRect)
+        
+        drawResizeHandle(in: ctx, rect: borderRect)
+        
+        ctx.restoreGState()
+    }
+    
+    private func drawResizeHandle(in ctx: CGContext, rect: CGRect) {
+        let handleSize: CGFloat = 12
+        
+        // リサイズハンドル（右上にチェックマーク）
+        let resizeHandleRect = CGRect(
+            x: rect.maxX - handleSize/2,
+            y: rect.minY - handleSize/2,
+            width: handleSize,
+            height: handleSize
+        )
+        
+        ctx.setFillColor(UIColor.systemBlue.cgColor)
+        ctx.setStrokeColor(UIColor.white.cgColor)
+        ctx.setLineWidth(1.0)
+        ctx.setLineDash(phase: 0, lengths: [])
+        
+        ctx.fillEllipse(in: resizeHandleRect)
+        ctx.strokeEllipse(in: resizeHandleRect)
+        
+        // チェックマークを描画
+        ctx.setStrokeColor(UIColor.white.cgColor)
+        ctx.setLineWidth(2.0)
+        let checkPath = CGMutablePath()
+        let centerX = resizeHandleRect.midX
+        let centerY = resizeHandleRect.midY
+        checkPath.move(to: CGPoint(x: centerX - 3, y: centerY))
+        checkPath.addLine(to: CGPoint(x: centerX - 1, y: centerY + 2))
+        checkPath.addLine(to: CGPoint(x: centerX + 3, y: centerY - 2))
+        ctx.addPath(checkPath)
+        ctx.strokePath()
+    }
+}
+
 class FillTool: SketchTool {
     var lineWidth: CGFloat
     var lineColor: UIColor

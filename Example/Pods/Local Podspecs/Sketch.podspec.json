@@ -1,6 +1,6 @@
 {
   "name": "Sketch",
-  "version": "2.0",
+  "version": "3.1",
   "license": "MIT",
   "homepage": "https://github.com/daihase/Sketch",
   "authors": {
@@ -9,11 +9,17 @@
   "summary": "Just placing, anyone can make drawing application.",
   "source": {
     "git": "https://github.com/daihase/Sketch.git",
-    "tag": "2.0"
+    "tag": "3.1"
   },
-  "swift_version": "4.2",
+  "swift_versions": "5.0",
   "platforms": {
-    "ios": "9.2"
+    "ios": "9.3"
   },
-  "source_files": "Sketch/Classes/**/*"
+  "source_files": "Sketch/Classes/**/*",
+  "resource_bundles": {
+    "Sketch": [
+      "Sketch/PrivacyInfo.xcprivacy"
+    ]
+  },
+  "swift_version": "5.0"
 }

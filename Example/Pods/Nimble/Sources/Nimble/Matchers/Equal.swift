@@ -1,219 +1,271 @@
-import Foundation
+internal func equal<T>(
+    _ expectedValue: T?,
+    by areEquivalent: @escaping (T, T) -> Bool
+) -> Predicate<T> {
+    Predicate.define("equal <\(stringify(expectedValue))>") { actualExpression, msg in
+        let actualValue = try actualExpression.evaluate()
+        switch (expectedValue, actualValue) {
+        case (nil, _?):
+            return PredicateResult(status: .fail, message: msg.appendedBeNilHint())
+        case (_, nil):
+            return PredicateResult(status: .fail, message: msg)
+        case (let expected?, let actual?):
+            let matches = areEquivalent(expected, actual)
+            return PredicateResult(bool: matches, message: msg)
+        }
+    }
+}
+
+/// A Nimble matcher that succeeds when the actual value is equal to the expected value.
+/// Values can support equal by supporting the Equatable protocol.
+///
+/// @see beCloseTo if you want to match imprecise types (eg - floats, doubles).
+public func equal<T: Equatable>(_ expectedValue: T) -> Predicate<T> {
+    equal(expectedValue as T?)
+}
+
+/// A Nimble matcher allowing comparison of collection with optional type
+public func equal<T: Equatable>(_ expectedValue: [T?]) -> Predicate<[T?]> {
+    Predicate.define("equal <\(stringify(expectedValue))>") { actualExpression, msg in
+        guard let actualValue = try actualExpression.evaluate() else {
+            return PredicateResult(
+                status: .fail,
+                message: msg.appendedBeNilHint()
+            )
+        }
+
+        let matches = expectedValue == actualValue
+        return PredicateResult(bool: matches, message: msg)
+    }
+}
 
 /// A Nimble matcher that succeeds when the actual value is equal to the expected value.
 /// Values can support equal by supporting the Equatable protocol.
 ///
 /// @see beCloseTo if you want to match imprecise types (eg - floats, doubles).
 public func equal<T: Equatable>(_ expectedValue: T?) -> Predicate<T> {
-    return Predicate.define("equal <\(stringify(expectedValue))>") { actualExpression, msg in
-        let actualValue = try actualExpression.evaluate()
-        let matches = actualValue == expectedValue && expectedValue != nil
-        if expectedValue == nil || actualValue == nil {
-            if expectedValue == nil && actualValue != nil {
-                return PredicateResult(
-                    status: .fail,
-                    message: msg.appendedBeNilHint()
-                )
-            }
-            return PredicateResult(status: .fail, message: msg)
-        }
-        return PredicateResult(status: PredicateStatus(bool: matches), message: msg)
-    }
+    equal(expectedValue, by: ==)
 }
 
-/// A Nimble matcher that succeeds when the actual value is equal to the expected value.
-/// Values can support equal by supporting the Equatable protocol.
-///
-/// @see beCloseTo if you want to match imprecise types (eg - floats, doubles).
-public func equal<T, C: Equatable>(_ expectedValue: [T: C]?) -> Predicate<[T: C]> {
-    return Predicate.define("equal <\(stringify(expectedValue))>") { actualExpression, msg in
-        let actualValue = try actualExpression.evaluate()
-        if expectedValue == nil || actualValue == nil {
-            if expectedValue == nil && actualValue != nil {
-                return PredicateResult(
-                    status: .fail,
-                    message: msg.appendedBeNilHint()
-                )
-            }
-            return PredicateResult(status: .fail, message: msg)
-        }
-        return PredicateResult(
-            status: PredicateStatus(bool: expectedValue! == actualValue!),
-            message: msg
-        )
-    }
+/// A Nimble matcher that succeeds when the actual set is equal to the expected set.
+public func equal<T>(_ expectedValue: Set<T>) -> Predicate<Set<T>> {
+    equal(expectedValue as Set<T>?)
 }
 
-/// A Nimble matcher that succeeds when the actual collection is equal to the expected collection.
-/// Items must implement the Equatable protocol.
-public func equal<T: Equatable>(_ expectedValue: [T]?) -> Predicate<[T]> {
-    return Predicate.define("equal <\(stringify(expectedValue))>") { actualExpression, msg in
-        let actualValue = try actualExpression.evaluate()
-        if expectedValue == nil || actualValue == nil {
-            if expectedValue == nil && actualValue != nil {
-                return PredicateResult(
-                    status: .fail,
-                    message: msg.appendedBeNilHint()
-                )
-            }
+/// A Nimble matcher that succeeds when the actual set is equal to the expected set.
+public func equal<T>(_ expectedValue: Set<T>?) -> Predicate<Set<T>> {
+    equal(expectedValue, stringify: { stringify($0) })
+}
+
+/// A Nimble matcher that succeeds when the actual set is equal to the expected set.
+public func equal<T: Comparable>(_ expectedValue: Set<T>) -> Predicate<Set<T>> {
+    equal(expectedValue as Set<T>?)
+}
+
+/// A Nimble matcher that succeeds when the actual set is equal to the expected set.
+public func equal<T: Comparable>(_ expectedValue: Set<T>?) -> Predicate<Set<T>> {
+    equal(expectedValue, stringify: { set in
+        stringify(set.map { Array($0).sorted(by: <) })
+    })
+}
+
+private func equal<T>(_ expectedValue: Set<T>?, stringify: @escaping (Set<T>?) -> String) -> Predicate<Set<T>> {
+    Predicate { actualExpression in
+        var errorMessage: ExpectationMessage =
+            .expectedActualValueTo("equal <\(stringify(expectedValue))>")
+
+        guard let expectedValue = expectedValue else {
             return PredicateResult(
                 status: .fail,
-                message: msg
+                message: errorMessage.appendedBeNilHint()
             )
         }
-        return PredicateResult(
-            bool: expectedValue! == actualValue!,
-            message: msg
+
+        guard let actualValue = try actualExpression.evaluate() else {
+            return PredicateResult(
+                status: .fail,
+                message: errorMessage.appendedBeNilHint()
+            )
+        }
+
+        errorMessage = .expectedCustomValueTo(
+            "equal <\(stringify(expectedValue))>",
+            actual: "<\(stringify(actualValue))>"
+        )
+
+        if expectedValue == actualValue {
+            return PredicateResult(
+                status: .matches,
+                message: errorMessage
+            )
+        }
+
+        let missing = expectedValue.subtracting(actualValue)
+        if missing.count > 0 {
+            errorMessage = errorMessage.appended(message: ", missing <\(stringify(missing))>")
+        }
+
+        let extra = actualValue.subtracting(expectedValue)
+        if extra.count > 0 {
+            errorMessage = errorMessage.appended(message: ", extra <\(stringify(extra))>")
+        }
+        return  PredicateResult(
+            status: .doesNotMatch,
+            message: errorMessage
         )
     }
 }
 
-/// A Nimble matcher allowing comparison of collection with optional type
-public func equal<T: Equatable>(_ expectedValue: [T?]) -> Predicate<[T?]> {
-    return Predicate.define("equal <\(stringify(expectedValue))>") { actualExpression, msg in
-        if let actualValue = try actualExpression.evaluate() {
-            let doesNotMatch = PredicateResult(
-                status: .doesNotMatch,
-                message: msg
-            )
-
-            if expectedValue.count != actualValue.count {
-                return doesNotMatch
-            }
-
-            for (index, item) in actualValue.enumerated() {
-                let otherItem = expectedValue[index]
-                if item == nil && otherItem == nil {
-                    continue
-                } else if item == nil && otherItem != nil {
-                    return doesNotMatch
-                } else if item != nil && otherItem == nil {
-                    return doesNotMatch
-                } else if item! != otherItem! {
-                    return doesNotMatch
-                }
-            }
-
-            return PredicateResult(
-                status: .matches,
-                message: msg
-            )
-        } else {
+/// A Nimble matcher that succeeds when the actual dictionary is equal to the expected dictionary
+public func equal<K: Hashable, V: Equatable>(_ expectedValue: [K: V?]) -> Predicate<[K: V]> {
+    Predicate.define("equal <\(stringify(expectedValue))>") { actualExpression, msg in
+        guard let actualValue = try actualExpression.evaluate() else {
             return PredicateResult(
                 status: .fail,
                 message: msg.appendedBeNilHint()
             )
         }
+
+        let matches = expectedValue == actualValue
+        return PredicateResult(bool: matches, message: msg)
     }
 }
 
-/// A Nimble matcher that succeeds when the actual set is equal to the expected set.
-public func equal<T>(_ expectedValue: Set<T>?) -> Predicate<Set<T>> {
-    return equal(expectedValue, stringify: { stringify($0) })
-}
-
-/// A Nimble matcher that succeeds when the actual set is equal to the expected set.
-public func equal<T: Comparable>(_ expectedValue: Set<T>?) -> Predicate<Set<T>> {
-    return equal(expectedValue, stringify: {
-        if let set = $0 {
-            return stringify(Array(set).sorted { $0 < $1 })
-        } else {
-            return "nil"
-        }
-    })
-}
-
-private func equal<T>(_ expectedValue: Set<T>?, stringify: @escaping (Set<T>?) -> String) -> Predicate<Set<T>> {
-    return Predicate { actualExpression in
-        var errorMessage: ExpectationMessage =
-            .expectedActualValueTo("equal <\(stringify(expectedValue))>")
-
-        if let expectedValue = expectedValue {
-            if let actualValue = try actualExpression.evaluate() {
-                errorMessage = .expectedCustomValueTo(
-                    "equal <\(stringify(expectedValue))>",
-                    "<\(stringify(actualValue))>"
-                )
-
-                if expectedValue == actualValue {
-                    return PredicateResult(
-                        status: .matches,
-                        message: errorMessage
-                    )
-                }
-
-                let missing = expectedValue.subtracting(actualValue)
-                if missing.count > 0 {
-                    errorMessage = errorMessage.appended(message: ", missing <\(stringify(missing))>")
-                }
-
-                let extra = actualValue.subtracting(expectedValue)
-                if extra.count > 0 {
-                    errorMessage = errorMessage.appended(message: ", extra <\(stringify(extra))>")
-                }
-                return  PredicateResult(
-                    status: .doesNotMatch,
-                    message: errorMessage
-                )
-            }
-            return PredicateResult(
-                status: .fail,
-                message: errorMessage.appendedBeNilHint()
-            )
-        } else {
-            return PredicateResult(
-                status: .fail,
-                message: errorMessage.appendedBeNilHint()
-            )
-        }
-    }
-}
-
-public func ==<T: Equatable>(lhs: Expectation<T>, rhs: T?) {
+public func == <T: Equatable>(lhs: SyncExpectation<T>, rhs: T) {
     lhs.to(equal(rhs))
 }
 
-public func !=<T: Equatable>(lhs: Expectation<T>, rhs: T?) {
-    lhs.toNot(equal(rhs))
-}
-
-public func ==<T: Equatable>(lhs: Expectation<[T]>, rhs: [T]?) {
+public func == <T: Equatable>(lhs: SyncExpectation<T>, rhs: T?) {
     lhs.to(equal(rhs))
 }
 
-public func !=<T: Equatable>(lhs: Expectation<[T]>, rhs: [T]?) {
+public func != <T: Equatable>(lhs: SyncExpectation<T>, rhs: T) {
     lhs.toNot(equal(rhs))
 }
 
-public func == <T>(lhs: Expectation<Set<T>>, rhs: Set<T>?) {
+public func != <T: Equatable>(lhs: SyncExpectation<T>, rhs: T?) {
+    lhs.toNot(equal(rhs))
+}
+
+public func == <T: Equatable>(lhs: SyncExpectation<[T]>, rhs: [T]?) {
     lhs.to(equal(rhs))
 }
 
-public func != <T>(lhs: Expectation<Set<T>>, rhs: Set<T>?) {
+public func != <T: Equatable>(lhs: SyncExpectation<[T]>, rhs: [T]?) {
     lhs.toNot(equal(rhs))
 }
 
-public func ==<T: Comparable>(lhs: Expectation<Set<T>>, rhs: Set<T>?) {
+public func == <T>(lhs: SyncExpectation<Set<T>>, rhs: Set<T>) {
     lhs.to(equal(rhs))
 }
 
-public func !=<T: Comparable>(lhs: Expectation<Set<T>>, rhs: Set<T>?) {
-    lhs.toNot(equal(rhs))
-}
-
-public func ==<T, C: Equatable>(lhs: Expectation<[T: C]>, rhs: [T: C]?) {
+public func == <T>(lhs: SyncExpectation<Set<T>>, rhs: Set<T>?) {
     lhs.to(equal(rhs))
 }
 
-public func !=<T, C: Equatable>(lhs: Expectation<[T: C]>, rhs: [T: C]?) {
+public func != <T>(lhs: SyncExpectation<Set<T>>, rhs: Set<T>) {
     lhs.toNot(equal(rhs))
 }
 
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-extension NMBObjCMatcher {
-    @objc public class func equalMatcher(_ expected: NSObject) -> NMBMatcher {
-        return NMBPredicate { actualExpression in
-            return try equal(expected).satisfies(actualExpression).toObjectiveC()
+public func != <T>(lhs: SyncExpectation<Set<T>>, rhs: Set<T>?) {
+    lhs.toNot(equal(rhs))
+}
+
+public func == <T: Comparable>(lhs: SyncExpectation<Set<T>>, rhs: Set<T>) {
+    lhs.to(equal(rhs))
+}
+
+public func == <T: Comparable>(lhs: SyncExpectation<Set<T>>, rhs: Set<T>?) {
+    lhs.to(equal(rhs))
+}
+
+public func != <T: Comparable>(lhs: SyncExpectation<Set<T>>, rhs: Set<T>) {
+    lhs.toNot(equal(rhs))
+}
+
+public func != <T: Comparable>(lhs: SyncExpectation<Set<T>>, rhs: Set<T>?) {
+    lhs.toNot(equal(rhs))
+}
+
+public func == <T, C: Equatable>(lhs: SyncExpectation<[T: C]>, rhs: [T: C]?) {
+    lhs.to(equal(rhs))
+}
+
+public func != <T, C: Equatable>(lhs: SyncExpectation<[T: C]>, rhs: [T: C]?) {
+    lhs.toNot(equal(rhs))
+}
+
+public func == <T: Equatable>(lhs: AsyncExpectation<T>, rhs: T) async {
+    await lhs.to(equal(rhs))
+}
+
+public func == <T: Equatable>(lhs: AsyncExpectation<T>, rhs: T?) async {
+    await lhs.to(equal(rhs))
+}
+
+public func != <T: Equatable>(lhs: AsyncExpectation<T>, rhs: T) async {
+    await lhs.toNot(equal(rhs))
+}
+
+public func != <T: Equatable>(lhs: AsyncExpectation<T>, rhs: T?) async {
+    await lhs.toNot(equal(rhs))
+}
+
+public func == <T: Equatable>(lhs: AsyncExpectation<[T]>, rhs: [T]?) async {
+    await lhs.to(equal(rhs))
+}
+
+public func != <T: Equatable>(lhs: AsyncExpectation<[T]>, rhs: [T]?) async {
+    await lhs.toNot(equal(rhs))
+}
+
+public func == <T>(lhs: AsyncExpectation<Set<T>>, rhs: Set<T>) async {
+    await lhs.to(equal(rhs))
+}
+
+public func == <T>(lhs: AsyncExpectation<Set<T>>, rhs: Set<T>?) async {
+    await lhs.to(equal(rhs))
+}
+
+public func != <T>(lhs: AsyncExpectation<Set<T>>, rhs: Set<T>) async {
+    await lhs.toNot(equal(rhs))
+}
+
+public func != <T>(lhs: AsyncExpectation<Set<T>>, rhs: Set<T>?) async {
+    await lhs.toNot(equal(rhs))
+}
+
+public func == <T: Comparable>(lhs: AsyncExpectation<Set<T>>, rhs: Set<T>) async {
+    await lhs.to(equal(rhs))
+}
+
+public func == <T: Comparable>(lhs: AsyncExpectation<Set<T>>, rhs: Set<T>?) async {
+    await lhs.to(equal(rhs))
+}
+
+public func != <T: Comparable>(lhs: AsyncExpectation<Set<T>>, rhs: Set<T>) async {
+    await lhs.toNot(equal(rhs))
+}
+
+public func != <T: Comparable>(lhs: AsyncExpectation<Set<T>>, rhs: Set<T>?) async {
+    await lhs.toNot(equal(rhs))
+}
+
+public func == <T, C: Equatable>(lhs: AsyncExpectation<[T: C]>, rhs: [T: C]?) async {
+    await lhs.to(equal(rhs))
+}
+
+public func != <T, C: Equatable>(lhs: AsyncExpectation<[T: C]>, rhs: [T: C]?) async {
+    await lhs.toNot(equal(rhs))
+}
+
+#if canImport(Darwin)
+import class Foundation.NSObject
+
+extension NMBPredicate {
+    @objc public class func equalMatcher(_ expected: NSObject) -> NMBPredicate {
+        NMBPredicate { actualExpression in
+            try equal(expected).satisfies(actualExpression).toObjectiveC()
         }
     }
 }

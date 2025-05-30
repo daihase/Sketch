@@ -1,6 +1,6 @@
 ![](http://f.cl.ly/items/0r1E192C1R0b2g2Q3h2w/QuickLogo_Color.png)
 
-[![Build Status](https://travis-ci.org/Quick/Quick.svg?branch=master)](https://travis-ci.org/Quick/Quick)
+[![Build Status](https://github.com/Quick/Quick/actions/workflows/ci-xcode.yml/badge.svg)](https://github.com/Quick/Quick/actions/workflows/ci-xcode.yml)
 [![CocoaPods](https://img.shields.io/cocoapods/v/Quick.svg)](https://cocoapods.org/pods/Quick)
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Platforms](https://img.shields.io/cocoapods/p/Quick.svg)](https://cocoapods.org/pods/Quick)
@@ -44,7 +44,9 @@ Certain versions of Quick and Nimble only support certain versions of Swift. Dep
 
 |Swift version        |Quick version   |Nimble version |
 |:--------------------|:---------------|:--------------|
-|Swift 3              |v1.0.0 or later |v5.0.0 or later|
+|Swift 5.2            |v3.0.0 or later |v9.0.0 or later|
+|Swift 4.2 / Swift 5  |v1.3.2 or later |v7.3.2 or later|
+|Swift 3 / Swift 4    |v1.0.0 or later |v5.0.0 or later|
 |Swift 2.2 / Swift 2.3|v0.9.3          |v4.1.0         |
 
 ## Documentation

@@ -37,7 +37,7 @@ final class PhotoAuthorization {
             completion?(PhotoAuthorizedResult.error(.denied))
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: AVMediaType(rawValue: mediaType)) { granted in
-                DispatchQueue.main.async() {
+                DispatchQueue.main.async {
                     if granted {
                         completion?(PhotoAuthorizedResult.success)
                     } else {
@@ -45,6 +45,8 @@ final class PhotoAuthorization {
                     }
                 }
             }
+        @unknown default:
+            completion?(PhotoAuthorizedResult.error(.denied))
         }
     }
     
@@ -54,22 +56,30 @@ final class PhotoAuthorization {
     
     static func photo(completion: PhotoAuthorizedCompletion?) {
         switch PHPhotoLibrary.authorizationStatus() {
-        case .authorized:
+        case .authorized, .limited:
+            // iOS 14+ 限定的アクセスも success 扱いにする場合
             completion?(PhotoAuthorizedResult.success)
         case .restricted:
             completion?(PhotoAuthorizedResult.error(.restricted))
         case .denied:
             completion?(PhotoAuthorizedResult.error(.denied))
         case .notDetermined:
-            PHPhotoLibrary.requestAuthorization() { status in
-                DispatchQueue.main.async() {
-                    if status == PHAuthorizationStatus.authorized {
+            PHPhotoLibrary.requestAuthorization { status in
+                DispatchQueue.main.async {
+                    switch status {
+                    case .authorized, .limited:
                         completion?(PhotoAuthorizedResult.success)
-                    } else {
+                    case .restricted:
+                        completion?(PhotoAuthorizedResult.error(.restricted))
+                    case .denied, .notDetermined:
+                        completion?(PhotoAuthorizedResult.error(.denied))
+                    @unknown default:
                         completion?(PhotoAuthorizedResult.error(.denied))
                     }
                 }
             }
+        @unknown default:
+            completion?(PhotoAuthorizedResult.error(.denied))
         }
     }
 }

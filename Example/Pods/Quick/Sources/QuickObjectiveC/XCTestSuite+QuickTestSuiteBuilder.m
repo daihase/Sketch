@@ -1,6 +1,11 @@
 #import <XCTest/XCTest.h>
 #import <objc/runtime.h>
+
+#if __has_include("Quick-Swift.h")
+#import "Quick-Swift.h"
+#else
 #import <Quick/Quick-Swift.h>
+#endif
 
 @interface XCTestSuite (QuickTestSuiteBuilder)
 @end
@@ -34,7 +39,8 @@
     FooSpec/testBar
  */
 + (nullable instancetype)qck_hooked_testSuiteForTestCaseWithName:(nonnull NSString *)name {
-    return [QuickTestSuite selectedTestSuiteForTestCaseWithName:name];
+    NSArray<NSString *> *components = [name componentsSeparatedByString:@"/"];
+    return [QuickTestSuite selectedTestSuiteForTestCaseWithName:[components firstObject] testName:[components count] > 1 ? [components lastObject] : nil];
 }
 
 @end

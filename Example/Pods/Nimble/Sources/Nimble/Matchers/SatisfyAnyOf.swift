@@ -1,57 +1,104 @@
-import Foundation
-
 /// A Nimble matcher that succeeds when the actual value matches with any of the matchers
-/// provided in the variable list of matchers. 
-public func satisfyAnyOf<T, U>(_ matchers: U...) -> Predicate<T>
-    where U: Matcher, U.ValueType == T {
-        return satisfyAnyOf(matchers.map { $0.predicate })
+/// provided in the variable list of matchers.
+public func satisfyAnyOf<T>(_ predicates: Predicate<T>...) -> Predicate<T> {
+    return satisfyAnyOf(predicates)
 }
 
-internal func satisfyAnyOf<T>(_ predicates: [Predicate<T>]) -> Predicate<T> {
-        return Predicate.define { actualExpression in
-            var postfixMessages = [String]()
-            var matches = false
-            for predicate in predicates {
-                let result = try predicate.satisfies(actualExpression)
-                if result.toBoolean(expectation: .toMatch) {
-                    matches = true
-                }
-                postfixMessages.append("{\(result.message.expectedMessage)}")
+/// A Nimble matcher that succeeds when the actual value matches with any of the matchers
+/// provided in the array of matchers.
+public func satisfyAnyOf<T>(_ predicates: [Predicate<T>]) -> Predicate<T> {
+    return Predicate.define { actualExpression in
+        let cachedExpression = actualExpression.withCaching()
+        var postfixMessages = [String]()
+        var status: PredicateStatus = .doesNotMatch
+        for predicate in predicates {
+            let result = try predicate.satisfies(cachedExpression)
+            if result.status == .fail {
+                status = .fail
+            } else if result.status == .matches, status != .fail {
+                status = .matches
             }
-
-            var msg: ExpectationMessage
-            if let actualValue = try actualExpression.evaluate() {
-                msg = .expectedCustomValueTo(
-                    "match one of: " + postfixMessages.joined(separator: ", or "),
-                    "\(actualValue)"
-                )
-            } else {
-                msg = .expectedActualValueTo(
-                    "match one of: " + postfixMessages.joined(separator: ", or ")
-                )
-            }
-
-            return PredicateResult(bool: matches, message: msg)
+            postfixMessages.append("{\(result.message.expectedMessage)}")
         }
+
+        var msg: ExpectationMessage
+        if let actualValue = try cachedExpression.evaluate() {
+            msg = .expectedCustomValueTo(
+                "match one of: " + postfixMessages.joined(separator: ", or "),
+                actual: "\(actualValue)"
+            )
+        } else {
+            msg = .expectedActualValueTo(
+                "match one of: " + postfixMessages.joined(separator: ", or ")
+            )
+        }
+
+        return PredicateResult(status: status, message: msg)
+    }
 }
 
 public func || <T>(left: Predicate<T>, right: Predicate<T>) -> Predicate<T> {
-        return satisfyAnyOf(left, right)
-}
-
-public func || <T>(left: NonNilMatcherFunc<T>, right: NonNilMatcherFunc<T>) -> Predicate<T> {
     return satisfyAnyOf(left, right)
 }
 
-public func || <T>(left: MatcherFunc<T>, right: MatcherFunc<T>) -> Predicate<T> {
-    return satisfyAnyOf(left, right)
+// There's a compiler bug in swift 5.7.2 and earlier (xcode 14.2 and earlier)
+// which causes runtime crashes when you use `[any AsyncablePredicate<T>]`.
+// https://github.com/apple/swift/issues/61403
+#if swift(>=5.8.0)
+/// A Nimble matcher that succeeds when the actual value matches with any of the matchers
+/// provided in the variable list of matchers.
+@available(macOS 13.0.0, iOS 16.0.0, tvOS 16.0.0, watchOS 9.0.0, *)
+public func satisfyAnyOf<T>(_ predicates: any AsyncablePredicate<T>...) -> AsyncPredicate<T> {
+    return satisfyAnyOf(predicates)
 }
 
-#if os(macOS) || os(iOS) || os(tvOS) || os(watchOS)
-extension NMBObjCMatcher {
-    @objc public class func satisfyAnyOfMatcher(_ matchers: [NMBMatcher]) -> NMBPredicate {
+/// A Nimble matcher that succeeds when the actual value matches with any of the matchers
+/// provided in the array of matchers.
+@available(macOS 13.0.0, iOS 16.0.0, tvOS 16.0.0, watchOS 9.0.0, *)
+public func satisfyAnyOf<T>(_ predicates: [any AsyncablePredicate<T>]) -> AsyncPredicate<T> {
+    return AsyncPredicate.define { actualExpression in
+        let cachedExpression = actualExpression.withCaching()
+        var postfixMessages = [String]()
+        var status: PredicateStatus = .doesNotMatch
+        for predicate in predicates {
+            let result = try await predicate.satisfies(cachedExpression)
+            if result.status == .fail {
+                status = .fail
+            } else if result.status == .matches, status != .fail {
+                status = .matches
+            }
+            postfixMessages.append("{\(result.message.expectedMessage)}")
+        }
+
+        var msg: ExpectationMessage
+        if let actualValue = try await cachedExpression.evaluate() {
+            msg = .expectedCustomValueTo(
+                "match one of: " + postfixMessages.joined(separator: ", or "),
+                actual: "\(actualValue)"
+            )
+        } else {
+            msg = .expectedActualValueTo(
+                "match one of: " + postfixMessages.joined(separator: ", or ")
+            )
+        }
+
+        return PredicateResult(status: status, message: msg)
+    }
+}
+
+@available(macOS 13.0.0, iOS 16.0.0, tvOS 16.0.0, watchOS 9.0.0, *)
+public func || <T>(left: some AsyncablePredicate<T>, right: some AsyncablePredicate<T>) -> AsyncPredicate<T> {
+    return satisfyAnyOf(left, right)
+}
+#endif // swift(>=5.8.0)
+
+#if canImport(Darwin)
+import class Foundation.NSObject
+
+extension NMBPredicate {
+    @objc public class func satisfyAnyOfMatcher(_ predicates: [NMBPredicate]) -> NMBPredicate {
         return NMBPredicate { actualExpression in
-            if matchers.isEmpty {
+            if predicates.isEmpty {
                 return NMBPredicateResult(
                     status: NMBPredicateStatus.fail,
                     message: NMBExpectationMessage(
@@ -61,17 +108,9 @@ extension NMBObjCMatcher {
             }
 
             var elementEvaluators = [Predicate<NSObject>]()
-            for matcher in matchers {
+            for predicate in predicates {
                 let elementEvaluator = Predicate<NSObject> { expression in
-                    if let predicate = matcher as? NMBPredicate {
-                        // swiftlint:disable:next line_length
-                        return predicate.satisfies({ try expression.evaluate() }, location: actualExpression.location).toSwift()
-                    } else {
-                        let failureMessage = FailureMessage()
-                        // swiftlint:disable:next line_length
-                        let success = matcher.matches({ try! expression.evaluate() }, failureMessage: failureMessage, location: actualExpression.location)
-                        return PredicateResult(bool: success, message: failureMessage.toExpectationMessage())
-                    }
+                    return predicate.satisfies({ try expression.evaluate() }, location: actualExpression.location).toSwift()
                 }
 
                 elementEvaluators.append(elementEvaluator)

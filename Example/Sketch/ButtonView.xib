@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_5" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -13,22 +11,13 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="zno-2E-1Ho" userLabel="ButtonView" customClass="ButtonView" customModule="Sketch_Example" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="614" height="50"/>
+            <rect key="frame" x="0.0" y="0.0" width="614" height="117"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iLe-2C-NT3" userLabel="Eraser">
-                    <rect key="frame" x="26" y="44" width="224" height="224"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="iLe-2C-NT3" secondAttribute="height" multiplier="1:1" id="99Q-2x-0FI"/>
-                    </constraints>
-                    <state key="normal" image="Eraser"/>
-                    <connections>
-                        <action selector="tapEraserButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="gDC-cG-GfR"/>
-                    </connections>
-                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vue-Y2-COy" userLabel="Pen">
-                    <rect key="frame" x="5" y="0.0" width="16" height="16"/>
+                    <rect key="frame" x="5" y="48" width="42" height="42"/>
                     <constraints>
+                        <constraint firstAttribute="width" constant="42" id="Pen-Width-Constraint"/>
                         <constraint firstAttribute="width" secondItem="Vue-Y2-COy" secondAttribute="height" multiplier="1:1" id="RbR-gD-ISi"/>
                     </constraints>
                     <state key="normal" image="Pen"/>
@@ -36,11 +25,33 @@
                         <action selector="tapPenButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="mEK-my-mGR"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iLe-2C-NT3" userLabel="Eraser">
+                    <rect key="frame" x="52" y="48" width="42" height="42"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="iLe-2C-NT3" secondAttribute="height" multiplier="1:1" id="99Q-2x-0FI"/>
+                        <constraint firstAttribute="width" constant="42" id="Eraser-Width-Constraint"/>
+                    </constraints>
+                    <state key="normal" image="Eraser"/>
+                    <connections>
+                        <action selector="tapEraserButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="gDC-cG-GfR"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pct-JJ-fLS" userLabel="Undo">
+                    <rect key="frame" x="99" y="48" width="42" height="42"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="pct-JJ-fLS" secondAttribute="height" multiplier="1:1" id="USc-XN-eoQ"/>
+                        <constraint firstAttribute="width" constant="42" id="Undo-Width-Constraint"/>
+                    </constraints>
+                    <state key="normal" image="Undo"/>
+                    <connections>
+                        <action selector="tapUndoButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="nWD-lZ-JIK"/>
+                    </connections>
+                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="czJ-mb-Vl1" userLabel="Redo">
-                    <rect key="frame" x="302" y="44" width="6" height="6"/>
+                    <rect key="frame" x="146" y="48" width="42" height="42"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="czJ-mb-Vl1" secondAttribute="height" multiplier="1:1" id="OUp-fP-Ssf"/>
-                        <constraint firstAttribute="width" secondItem="czJ-mb-Vl1" secondAttribute="height" multiplier="1:1" id="YrP-MA-Cyn"/>
+                        <constraint firstAttribute="width" constant="42" id="Redo-Width-Constraint"/>
                     </constraints>
                     <state key="normal" image="Redo"/>
                     <connections>
@@ -48,8 +59,9 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fWc-Gd-SRf" userLabel="Clear">
-                    <rect key="frame" x="313" y="0.0" width="16" height="16"/>
+                    <rect key="frame" x="193" y="48" width="42" height="42"/>
                     <constraints>
+                        <constraint firstAttribute="width" constant="42" id="Clear-Width-Constraint"/>
                         <constraint firstAttribute="width" secondItem="fWc-Gd-SRf" secondAttribute="height" multiplier="1:1" id="MyH-rL-BVX"/>
                     </constraints>
                     <state key="normal" image="Clear"/>
@@ -57,19 +69,43 @@
                         <action selector="tapClearButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="Gas-1y-Cfk"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QZg-fK-eZE">
-                    <rect key="frame" x="334" y="44" width="400" height="400"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QZg-fK-eZE" userLabel="Palette">
+                    <rect key="frame" x="240" y="48" width="42" height="42"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="QZg-fK-eZE" secondAttribute="height" multiplier="1:1" id="Ngo-Jh-Pmr"/>
+                        <constraint firstAttribute="width" constant="42" id="Palette-Width-Constraint"/>
                     </constraints>
                     <state key="normal" image="Palette"/>
                     <connections>
                         <action selector="tapPaletteButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="6XF-co-jbh"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DzJ-Or-GLT">
-                    <rect key="frame" x="1186" y="44" width="400" height="400"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TaI-V6-jIs" userLabel="Fill">
+                    <rect key="frame" x="287" y="48" width="42" height="42"/>
                     <constraints>
+                        <constraint firstAttribute="width" secondItem="TaI-V6-jIs" secondAttribute="height" multiplier="1:1" id="6lL-5n-Nba"/>
+                        <constraint firstAttribute="width" constant="42" id="Fill-Width-Constraint"/>
+                    </constraints>
+                    <state key="normal" image="Fill"/>
+                    <connections>
+                        <action selector="tapFillButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="Leb-6o-j3r"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UIj-xL-iBe" userLabel="Stamp">
+                    <rect key="frame" x="334" y="48" width="42" height="42"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="UIj-xL-iBe" secondAttribute="height" multiplier="1:1" id="PcI-aQ-08R"/>
+                        <constraint firstAttribute="width" constant="42" id="Stamp-Width-Constraint"/>
+                    </constraints>
+                    <state key="normal" image="Stamp"/>
+                    <connections>
+                        <action selector="tapStampButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="dKx-24-aRn"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DzJ-Or-GLT" userLabel="Figure">
+                    <rect key="frame" x="381" y="48" width="42" height="42"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="42" id="Figure-Width-Constraint"/>
                         <constraint firstAttribute="width" secondItem="DzJ-Or-GLT" secondAttribute="height" multiplier="1:1" id="vv5-bi-aV6"/>
                     </constraints>
                     <state key="normal" image="Figure"/>
@@ -77,9 +113,10 @@
                         <action selector="tapFigureButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="YkR-IH-0JB"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rnG-cl-0U1">
-                    <rect key="frame" x="1591" y="44" width="400" height="400"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rnG-cl-0U1" userLabel="Filter">
+                    <rect key="frame" x="428" y="48" width="42" height="42"/>
                     <constraints>
+                        <constraint firstAttribute="width" constant="42" id="Filter-Width-Constraint"/>
                         <constraint firstAttribute="width" secondItem="rnG-cl-0U1" secondAttribute="height" multiplier="1:1" id="wVO-FB-vdG"/>
                     </constraints>
                     <state key="normal" image="Filter"/>
@@ -87,9 +124,10 @@
                         <action selector="tapFilterButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="OtD-UI-IyX"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UuW-3G-hcX">
-                    <rect key="frame" x="1996" y="44" width="42" height="42"/>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UuW-3G-hcX" userLabel="Camera">
+                    <rect key="frame" x="475" y="48" width="42" height="42"/>
                     <constraints>
+                        <constraint firstAttribute="width" constant="42" id="Camera-Width-Constraint"/>
                         <constraint firstAttribute="width" secondItem="UuW-3G-hcX" secondAttribute="height" multiplier="1:1" id="Ydu-dZ-3OS"/>
                     </constraints>
                     <state key="normal" image="Camera"/>
@@ -97,88 +135,58 @@
                         <action selector="tapCameraButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="WGo-ir-ykT"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TaI-V6-jIs">
-                    <rect key="frame" x="734" y="44" width="42" height="42"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="TaI-V6-jIs" secondAttribute="height" multiplier="1:1" id="6lL-5n-Nba"/>
-                    </constraints>
-                    <state key="normal" image="Fill"/>
-                    <connections>
-                        <action selector="tapFillButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="Leb-6o-j3r"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UIj-xL-iBe">
-                    <rect key="frame" x="781" y="44" width="400" height="400"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="UIj-xL-iBe" secondAttribute="height" multiplier="1:1" id="PcI-aQ-08R"/>
-                    </constraints>
-                    <state key="normal" image="Stamp"/>
-                    <connections>
-                        <action selector="tapStampButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="dKx-24-aRn"/>
-                    </connections>
-                </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pct-JJ-fLS">
-                    <rect key="frame" x="255" y="44" width="42" height="42"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="pct-JJ-fLS" secondAttribute="height" multiplier="1:1" id="USc-XN-eoQ"/>
-                    </constraints>
-                    <state key="normal" image="Undo"/>
-                    <connections>
-                        <action selector="tapUndoButton:" destination="zno-2E-1Ho" eventType="touchUpInside" id="nWD-lZ-JIK"/>
-                    </connections>
-                </button>
             </subviews>
+            <viewLayoutGuide key="safeArea" id="Z4c-q5-Ylm"/>
             <constraints>
-                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="pct-JJ-fLS" secondAttribute="bottom" id="5NF-X1-H4X"/>
-                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="TaI-V6-jIs" secondAttribute="bottom" id="5i1-Hf-Zy0"/>
+                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="pct-JJ-fLS" secondAttribute="bottom" constant="4" id="5NF-X1-H4X"/>
+                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="TaI-V6-jIs" secondAttribute="bottom" constant="4" id="5i1-Hf-Zy0"/>
                 <constraint firstItem="czJ-mb-Vl1" firstAttribute="leading" secondItem="pct-JJ-fLS" secondAttribute="trailing" constant="5" id="5qz-nU-Qs3"/>
                 <constraint firstItem="Vue-Y2-COy" firstAttribute="leading" secondItem="Z4c-q5-Ylm" secondAttribute="leading" constant="5" id="7b8-zI-MxL"/>
                 <constraint firstItem="QZg-fK-eZE" firstAttribute="leading" secondItem="fWc-Gd-SRf" secondAttribute="trailing" constant="5" id="8N3-Fd-Ihl"/>
                 <constraint firstItem="pct-JJ-fLS" firstAttribute="leading" secondItem="iLe-2C-NT3" secondAttribute="trailing" constant="5" id="9sd-Vh-m9m"/>
-                <constraint firstItem="TaI-V6-jIs" firstAttribute="leading" secondItem="QZg-fK-eZE" secondAttribute="trailing" id="AUq-h3-Rhb"/>
-                <constraint firstItem="czJ-mb-Vl1" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="CaO-PG-hkm"/>
-                <constraint firstItem="UuW-3G-hcX" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="EIv-8g-VFx"/>
-                <constraint firstItem="QZg-fK-eZE" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="GEO-95-en7"/>
-                <constraint firstItem="Vue-Y2-COy" firstAttribute="top" secondItem="zno-2E-1Ho" secondAttribute="top" id="GnE-ja-Ajc"/>
+                <constraint firstItem="TaI-V6-jIs" firstAttribute="leading" secondItem="QZg-fK-eZE" secondAttribute="trailing" constant="5" id="AUq-h3-Rhb"/>
+                <constraint firstItem="czJ-mb-Vl1" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" constant="4" id="CaO-PG-hkm"/>
+                <constraint firstItem="UuW-3G-hcX" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" constant="4" id="EIv-8g-VFx"/>
+                <constraint firstItem="QZg-fK-eZE" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" constant="4" id="GEO-95-en7"/>
+                <constraint firstItem="Vue-Y2-COy" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" constant="4" id="GnE-ja-Ajc"/>
                 <constraint firstItem="fWc-Gd-SRf" firstAttribute="leading" secondItem="czJ-mb-Vl1" secondAttribute="trailing" constant="5" id="IMt-5h-1Mc"/>
-                <constraint firstItem="Vue-Y2-COy" firstAttribute="bottom" secondItem="Z4c-q5-Ylm" secondAttribute="bottom" id="IvF-dm-hhY"/>
-                <constraint firstItem="fWc-Gd-SRf" firstAttribute="top" secondItem="zno-2E-1Ho" secondAttribute="top" id="K29-ZK-Nth"/>
-                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="UuW-3G-hcX" secondAttribute="bottom" id="MNo-1V-Ncf"/>
-                <constraint firstItem="rnG-cl-0U1" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="NVb-BY-HiY"/>
-                <constraint firstItem="UIj-xL-iBe" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="OOM-FD-HuM"/>
+                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="Vue-Y2-COy" secondAttribute="bottom" constant="4" id="IvF-dm-hhY"/>
+                <constraint firstItem="fWc-Gd-SRf" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" constant="4" id="K29-ZK-Nth"/>
+                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="UuW-3G-hcX" secondAttribute="bottom" constant="4" id="MNo-1V-Ncf"/>
+                <constraint firstItem="rnG-cl-0U1" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" constant="4" id="NVb-BY-HiY"/>
+                <constraint firstItem="UIj-xL-iBe" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" constant="4" id="OOM-FD-HuM"/>
                 <constraint firstItem="UuW-3G-hcX" firstAttribute="leading" secondItem="rnG-cl-0U1" secondAttribute="trailing" constant="5" id="P5I-Se-GFv"/>
-                <constraint firstItem="QZg-fK-eZE" firstAttribute="bottom" secondItem="Z4c-q5-Ylm" secondAttribute="bottom" id="VFO-Kt-lCx"/>
-                <constraint firstAttribute="bottom" secondItem="czJ-mb-Vl1" secondAttribute="bottom" id="ZG3-FK-jQC"/>
+                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="QZg-fK-eZE" secondAttribute="bottom" constant="4" id="VFO-Kt-lCx"/>
+                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="czJ-mb-Vl1" secondAttribute="bottom" constant="4" id="ZG3-FK-jQC"/>
                 <constraint firstItem="DzJ-Or-GLT" firstAttribute="leading" secondItem="UIj-xL-iBe" secondAttribute="trailing" constant="5" id="ake-YO-OSq"/>
-                <constraint firstItem="rnG-cl-0U1" firstAttribute="bottom" secondItem="Z4c-q5-Ylm" secondAttribute="bottom" id="cqk-Lw-5xM"/>
+                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="rnG-cl-0U1" secondAttribute="bottom" constant="4" id="cqk-Lw-5xM"/>
                 <constraint firstItem="iLe-2C-NT3" firstAttribute="leading" secondItem="Vue-Y2-COy" secondAttribute="trailing" constant="5" id="enZ-GO-ANL"/>
-                <constraint firstItem="iLe-2C-NT3" firstAttribute="bottom" secondItem="Z4c-q5-Ylm" secondAttribute="bottom" id="h5z-oU-PUd"/>
+                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="iLe-2C-NT3" secondAttribute="bottom" constant="4" id="h5z-oU-PUd"/>
                 <constraint firstItem="rnG-cl-0U1" firstAttribute="leading" secondItem="DzJ-Or-GLT" secondAttribute="trailing" constant="5" id="hBq-aK-7cc"/>
-                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="fWc-Gd-SRf" secondAttribute="bottom" id="hUS-9D-LyJ"/>
-                <constraint firstItem="UIj-xL-iBe" firstAttribute="bottom" secondItem="Z4c-q5-Ylm" secondAttribute="bottom" id="mXe-eP-irH"/>
-                <constraint firstItem="pct-JJ-fLS" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="sUG-sa-U82"/>
-                <constraint firstItem="iLe-2C-NT3" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="u5g-gs-eN7"/>
-                <constraint firstItem="DzJ-Or-GLT" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="usF-IG-VBR"/>
+                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="fWc-Gd-SRf" secondAttribute="bottom" constant="4" id="hUS-9D-LyJ"/>
+                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="UIj-xL-iBe" secondAttribute="bottom" constant="4" id="mXe-eP-irH"/>
+                <constraint firstItem="pct-JJ-fLS" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" constant="4" id="sUG-sa-U82"/>
+                <constraint firstItem="iLe-2C-NT3" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" constant="4" id="u5g-gs-eN7"/>
+                <constraint firstItem="DzJ-Or-GLT" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" constant="4" id="usF-IG-VBR"/>
                 <constraint firstItem="UIj-xL-iBe" firstAttribute="leading" secondItem="TaI-V6-jIs" secondAttribute="trailing" constant="5" id="xgh-91-5v4"/>
-                <constraint firstItem="TaI-V6-jIs" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" id="yRH-wk-T4S"/>
-                <constraint firstItem="DzJ-Or-GLT" firstAttribute="bottom" secondItem="Z4c-q5-Ylm" secondAttribute="bottom" id="yif-xH-2Oo"/>
+                <constraint firstItem="TaI-V6-jIs" firstAttribute="top" secondItem="Z4c-q5-Ylm" secondAttribute="top" constant="4" id="yRH-wk-T4S"/>
+                <constraint firstItem="Z4c-q5-Ylm" firstAttribute="bottom" secondItem="DzJ-Or-GLT" secondAttribute="bottom" constant="4" id="yif-xH-2Oo"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="Z4c-q5-Ylm"/>
-            <point key="canvasLocation" x="171.19999999999999" y="228.48575712143929"/>
+            <point key="canvasLocation" x="171.01449275362319" y="250.78125"/>
         </view>
     </objects>
     <resources>
         <image name="Camera" width="42.666667938232422" height="42.666667938232422"/>
-        <image name="Clear" width="307.20001220703125" height="307.20001220703125"/>
-        <image name="Eraser" width="224.78048706054688" height="224.78048706054688"/>
-        <image name="Figure" width="400.69564819335938" height="400.69564819335938"/>
+        <image name="Clear" width="42.666667938232422" height="42.666667938232422"/>
+        <image name="Eraser" width="42.666667938232422" height="42.666667938232422"/>
+        <image name="Figure" width="42.666667938232422" height="42.666667938232422"/>
         <image name="Fill" width="42.666667938232422" height="42.666667938232422"/>
-        <image name="Filter" width="400.69564819335938" height="400.69564819335938"/>
-        <image name="Palette" width="400.69564819335938" height="400.69564819335938"/>
-        <image name="Pen" width="400.69564819335938" height="400.69564819335938"/>
+        <image name="Filter" width="42.666667938232422" height="42.666667938232422"/>
+        <image name="Palette" width="42.666667938232422" height="42.666667938232422"/>
+        <image name="Pen" width="42.666667938232422" height="42.666667938232422"/>
         <image name="Redo" width="42.666667938232422" height="42.666667938232422"/>
-        <image name="Stamp" width="400.69564819335938" height="400.69564819335938"/>
-        <image name="Undo" width="42.082191467285156" height="42.082191467285156"/>
+        <image name="Stamp" width="42.666667938232422" height="42.666667938232422"/>
+        <image name="Undo" width="42.666667938232422" height="42.666667938232422"/>
     </resources>
 </document>

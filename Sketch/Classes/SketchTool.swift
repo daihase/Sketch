@@ -12,7 +12,7 @@ protocol SketchTool {
     var lineWidth: CGFloat { get set }
     var lineColor: UIColor { get set }
     var lineAlpha: CGFloat { get set }
-
+    
     func setInitialPoint(_ firstPoint: CGPoint)
     func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint)
     func draw()
@@ -29,7 +29,7 @@ class PenTool: UIBezierPath, SketchTool {
     var lineColor: UIColor
     var lineAlpha: CGFloat
     var drawingPenType: PenType
-
+    
     override init() {
         path = CGMutablePath.init()
         lineColor = .black
@@ -38,20 +38,20 @@ class PenTool: UIBezierPath, SketchTool {
         super.init()
         lineCapStyle = CGLineCap.round
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     func setInitialPoint(_ firstPoint: CGPoint) {}
-
+    
     func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {}
-
+    
     func createBezierRenderingBox(_ previousPoint2: CGPoint, withPreviousPoint previousPoint1: CGPoint, withCurrentPoint cgPoint: CGPoint) -> CGRect {
         let mid1 = middlePoint(previousPoint1, previousPoint2: previousPoint2)
         let mid2 = middlePoint(cgPoint, previousPoint2: previousPoint1)
         let subpath = CGMutablePath.init()
-
+        
         subpath.move(to: CGPoint(x: mid1.x, y: mid1.y))
         subpath.addQuadCurve(to: CGPoint(x: mid2.x, y: mid2.y), control: CGPoint(x: previousPoint1.x, y: previousPoint1.y))
         path.addPath(subpath)
@@ -61,10 +61,10 @@ class PenTool: UIBezierPath, SketchTool {
         boundingBox.origin.y -= lineWidth * 2.0
         boundingBox.size.width += lineWidth * 4.0
         boundingBox.size.height += lineWidth * 4.0
-
+        
         return boundingBox
     }
-
+    
     private func middlePoint(_ previousPoint1: CGPoint, previousPoint2: CGPoint) -> CGPoint {
         return CGPoint(x: (previousPoint1.x + previousPoint2.x) * 0.5, y: (previousPoint1.y + previousPoint2.y) * 0.5)
     }
@@ -124,7 +124,7 @@ class LineTool: SketchTool {
     var lineAlpha: CGFloat
     var firstPoint: CGPoint
     var lastPoint: CGPoint
-
+    
     init() {
         lineWidth = 1.0
         lineAlpha = 1.0
@@ -132,15 +132,15 @@ class LineTool: SketchTool {
         firstPoint = CGPoint(x: 0, y: 0)
         lastPoint = CGPoint(x: 0, y: 0)
     }
-
+    
     internal func setInitialPoint(_ firstPoint: CGPoint) {
         self.firstPoint = firstPoint
     }
-
+    
     internal func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {
         self.lastPoint = endPoint
     }
-
+    
     internal func draw() {
         guard let ctx = UIGraphicsGetCurrentContext() else { return }
         
@@ -152,19 +152,19 @@ class LineTool: SketchTool {
         ctx.addLine(to: CGPoint(x: lastPoint.x, y: lastPoint.y))
         ctx.strokePath()
     }
-
+    
     func angleWithFirstPoint(first: CGPoint, second: CGPoint) -> Float {
         let dx: CGFloat = second.x - first.x
         let dy: CGFloat = second.y - first.y
         let angle = atan2f(Float(dy), Float(dx))
-
+        
         return angle
     }
-
+    
     func pointWithAngle(angle: CGFloat, distance: CGFloat) -> CGPoint {
         let x = Float(distance) * cosf(Float(angle))
         let y = Float(distance) * sinf(Float(angle))
-
+        
         return CGPoint(x: CGFloat(x), y: CGFloat(y))
     }
 }
@@ -175,7 +175,7 @@ class ArrowTool: SketchTool {
     var lineAlpha: CGFloat
     var firstPoint: CGPoint
     var lastPoint: CGPoint
-
+    
     init() {
         lineWidth = 1.0
         lineAlpha = 1.0
@@ -183,15 +183,15 @@ class ArrowTool: SketchTool {
         firstPoint = CGPoint(x: 0, y: 0)
         lastPoint = CGPoint(x: 0, y: 0)
     }
-
+    
     func setInitialPoint(_ firstPoint: CGPoint) {
         self.firstPoint = firstPoint
     }
-
+    
     func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {
         lastPoint = endPoint
     }
-
+    
     func draw() {
         guard let ctx = UIGraphicsGetCurrentContext() else { return }
         
@@ -200,35 +200,35 @@ class ArrowTool: SketchTool {
         var point1 = pointWithAngle(angle: CGFloat(angle + Float(6.0 * .pi / 8.0)), distance: capHeight)
         var point2 = pointWithAngle(angle: CGFloat(angle - Float(6.0 * .pi / 8.0)), distance: capHeight)
         let endPointOffset = pointWithAngle(angle: CGFloat(angle), distance: lineWidth)
-
+        
         ctx.setStrokeColor(lineColor.cgColor)
         ctx.setLineCap(.square)
         ctx.setLineWidth(lineWidth)
         ctx.setAlpha(lineAlpha)
         ctx.move(to: CGPoint(x: firstPoint.x, y: firstPoint.y))
         ctx.addLine(to: CGPoint(x: lastPoint.x, y: lastPoint.y))
-
+        
         point1 = CGPoint(x: lastPoint.x + point1.x, y: lastPoint.y + point1.y)
         point2 = CGPoint(x: lastPoint.x + point2.x, y: lastPoint.y + point2.y)
-
+        
         ctx.move(to: CGPoint(x: point1.x, y: point1.y))
         ctx.addLine(to: CGPoint(x: lastPoint.x + endPointOffset.x, y: lastPoint.y + endPointOffset.y))
         ctx.addLine(to: CGPoint(x: point2.x, y: point2.y))
         ctx.strokePath()
     }
-
+    
     func angleWithFirstPoint(first: CGPoint, second: CGPoint) -> Float {
         let dx: CGFloat = second.x - first.x
         let dy: CGFloat = second.y - first.y
         let angle = atan2f(Float(dy), Float(dx))
-
+        
         return angle
     }
-
+    
     func pointWithAngle(angle: CGFloat, distance: CGFloat) -> CGPoint {
         let x = Float(distance) * cosf(Float(angle))
         let y = Float(distance) * sinf(Float(angle))
-
+        
         return CGPoint(x: CGFloat(x), y: CGFloat(y))
     }
 }
@@ -240,7 +240,7 @@ class RectTool: SketchTool {
     var firstPoint: CGPoint
     var lastPoint: CGPoint
     var isFill: Bool
-
+    
     init() {
         lineWidth = 1.0
         lineAlpha = 1.0
@@ -249,15 +249,15 @@ class RectTool: SketchTool {
         lastPoint = CGPoint(x: 0, y: 0)
         isFill = false
     }
-
+    
     internal func setInitialPoint(_ firstPoint: CGPoint) {
         self.firstPoint = firstPoint
     }
-
+    
     internal func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {
         self.lastPoint = endPoint
     }
-
+    
     internal func draw() {
         guard let ctx = UIGraphicsGetCurrentContext() else { return }
         
@@ -283,7 +283,7 @@ class EllipseTool: SketchTool {
     var firstPoint: CGPoint
     var lastPoint: CGPoint
     var isFill: Bool
-
+    
     init() {
         eraserWidth = 0
         lineWidth = 1.0
@@ -293,15 +293,15 @@ class EllipseTool: SketchTool {
         lastPoint = CGPoint(x: 0, y: 0)
         isFill = false
     }
-
+    
     internal func setInitialPoint(_ firstPoint: CGPoint) {
         self.firstPoint = firstPoint
     }
-
+    
     internal func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {
         lastPoint = endPoint
     }
-
+    
     internal func draw() {
         guard let ctx = UIGraphicsGetCurrentContext() else { return }
         
@@ -324,7 +324,7 @@ class StarTool: SketchTool {
     var lineAlpha: CGFloat
     var firstPoint: CGPoint
     var lastPoint: CGPoint
-
+    
     init() {
         lineWidth = 0
         lineColor = .blue
@@ -332,15 +332,15 @@ class StarTool: SketchTool {
         firstPoint = CGPoint(x: 0, y: 0)
         lastPoint = CGPoint(x: 0, y: 0)
     }
-
+    
     internal func setInitialPoint(_ firstPoint: CGPoint) {
         self.firstPoint = firstPoint
     }
-
+    
     internal func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {
         lastPoint = endPoint
     }
-
+    
     internal func draw() {
         guard let ctx = UIGraphicsGetCurrentContext() else { return }
         
@@ -348,7 +348,7 @@ class StarTool: SketchTool {
                           y: min(firstPoint.y, lastPoint.y),
                           width: abs(firstPoint.x - lastPoint.x),
                           height: abs(firstPoint.y - lastPoint.y))
-
+        
         let pathRef = CGMutablePath()
         pathRef.move(to: CGPoint(x: 98.582, y: 495))
         pathRef.addLine(to: CGPoint(x: 127.5, y: 317.716))
@@ -361,11 +361,11 @@ class StarTool: SketchTool {
         pathRef.addLine(to: CGPoint(x: 401.418, y: 495))
         pathRef.addLine(to: CGPoint(x: 250, y: 411.298))
         pathRef.closeSubpath()
-
+        
         var s = CGAffineTransform(scaleX: rect.width / 500.0, y: rect.height / 500.0)
         var a = CGAffineTransform(translationX: rect.minX, y: rect.minY)
         guard let pathRefTrans  = pathRef.copy(using: &s)?.copy(using: &a) else { return }
-
+        
         ctx.setLineWidth(lineWidth)
         ctx.setAlpha(lineAlpha)
         ctx.setStrokeColor(lineColor.cgColor)
@@ -380,26 +380,26 @@ class StampTool: SketchTool {
     var lineAlpha: CGFloat
     var touchPoint: CGPoint
     var stampImage: UIImage?
-
+    
     init() {
         lineWidth = 0
         lineColor = .blue
         lineAlpha = 0
         touchPoint = CGPoint(x: 0, y: 0)
     }
-
+    
     func setInitialPoint(_ firstPoint: CGPoint) {
         touchPoint = firstPoint
     }
-
+    
     func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {}
-
+    
     func setStampImage(image: UIImage?) {
         if let image = image {
             stampImage = image
         }
     }
-
+    
     func getStampImage() -> UIImage? {
         return stampImage
     }
@@ -430,16 +430,15 @@ class EditableStampTool: SketchTool {
     var stampRect: CGRect
     var originalSize: CGSize
     
-    // スケールと回転を分離して管理
+    
     var currentScale: CGFloat = 1.0
     var currentRotation: CGFloat = 0.0
     
-    // リサイズ機能用のプロパティ
+    
     var isResizing: Bool = false
     var resizeStartPoint: CGPoint = .zero
     var resizeStartScale: CGFloat = 1.0
     
-    // 回転機能用のプロパティ
     var isRotating: Bool = false
     var rotateStartPoint: CGPoint = .zero
     var rotateStartAngle: CGFloat = 0.0
@@ -506,7 +505,7 @@ class EditableStampTool: SketchTool {
         calculateStampRect()
     }
     
-    // リサイズハンドルの領域を取得（右上）
+    
     func getResizeHandleRect() -> CGRect {
         let handleSize: CGFloat = 46
         return CGRect(
@@ -517,7 +516,7 @@ class EditableStampTool: SketchTool {
         )
     }
     
-    // 回転ハンドルの領域を取得（右下）
+    
     func getRotateHandleRect() -> CGRect {
         let handleSize: CGFloat = 46
         return CGRect(
@@ -528,12 +527,12 @@ class EditableStampTool: SketchTool {
         )
     }
     
-    // リサイズハンドルがタップされたかチェック
+    
     func isResizeHandleTapped(point: CGPoint) -> Bool {
         return getResizeHandleRect().contains(point)
     }
     
-    // 削除ハンドルの領域を取得（左上）
+    
     func getDeleteHandleRect() -> CGRect {
         let handleSize: CGFloat = 46
         return CGRect(
@@ -544,24 +543,23 @@ class EditableStampTool: SketchTool {
         )
     }
     
-    // 削除ハンドルがタップされたかチェック
+    
     func isDeleteHandleTapped(point: CGPoint) -> Bool {
         return getDeleteHandleRect().contains(point)
     }
     
-    // 回転ハンドルがタップされたかチェック
+    
     func isRotateHandleTapped(point: CGPoint) -> Bool {
         return getRotateHandleRect().contains(point)
     }
     
-    // リサイズ開始
     func startResize(at point: CGPoint) {
         isResizing = true
         resizeStartPoint = point
         resizeStartScale = currentScale
     }
     
-    // リサイズ処理
+    
     func updateResize(to point: CGPoint) {
         guard isResizing else { return }
         
@@ -576,39 +574,32 @@ class EditableStampTool: SketchTool {
         }
     }
     
-    // リサイズ終了
     func endResize() {
         isResizing = false
     }
     
-    // 回転開始
     func startRotate(at point: CGPoint) {
         isRotating = true
         rotateStartPoint = point
         rotateStartAngle = currentRotation
     }
     
-    // 回転処理
     func updateRotate(to point: CGPoint) {
         guard isRotating else { return }
         
-        // スタンプの中心点
-        let center = CGPoint(x: touchPoint.x, y: touchPoint.y)
         
-        // 開始点と現在点の角度を計算
+        let center = CGPoint(x: touchPoint.x, y: touchPoint.y)
         let startAngle = atan2(rotateStartPoint.y - center.y, rotateStartPoint.x - center.x)
         let currentAngle = atan2(point.y - center.y, point.x - center.x)
-        
-        // 角度の差分を計算
         let angleDelta = currentAngle - startAngle
         currentRotation = rotateStartAngle + angleDelta
         
-        // スケールは変えずに回転だけ更新
+        
         transform = CGAffineTransform(scaleX: currentScale, y: currentScale).rotated(by: currentRotation)
         calculateStampRect()
     }
     
-    // 回転終了
+    
     func endRotate() {
         isRotating = false
     }
@@ -657,42 +648,39 @@ class EditableStampTool: SketchTool {
     }
     
     private func loadIcon(named name: String) -> UIImage? {
-        // メインバンドル（アプリ）から試す
+        
         if let image = UIImage(named: name) {
-            print("✅ 画像読み込み成功 (メインバンドル): \(name)")
+            
             return image
         }
         
-        // Frameworkのバンドルから試す
+        
         let frameworkBundle = Bundle(for: EditableStampTool.self)
         if let image = UIImage(named: name, in: frameworkBundle, compatibleWith: nil) {
-            print("✅ 画像読み込み成功 (Framework): \(name)")
+            
             return image
         }
         
-        // Frameworkのリソースバンドルから試す（CocoaPodsスタイル）
+        
         if let resourceBundleURL = frameworkBundle.url(forResource: "Sketch", withExtension: "bundle"),
            let resourceBundle = Bundle(url: resourceBundleURL) {
             if let image = UIImage(named: name, in: resourceBundle, compatibleWith: nil) {
-                print("✅ 画像読み込み成功 (リソースバンドル): \(name)")
+                
                 return image
             }
         }
         
-        // 直接ファイルパスから読み込みを試す
+        
         let possibleNames = [name, "\(name)@1x", "\(name)@2x", "\(name)@3x"]
         for fileName in possibleNames {
             if let imageURL = frameworkBundle.url(forResource: fileName, withExtension: "png"),
                let image = UIImage(contentsOfFile: imageURL.path) {
-                print("✅ 画像読み込み成功 (直接パス): \(fileName).png")
-                return image
+                
             }
         }
         
-        print("❌ 画像読み込み失敗: \(name)")
-        print("   Framework: \(frameworkBundle.bundlePath)")
         
-        // Framework内のリソースを列挙してデバッグ
+        
         if let resourcePath = frameworkBundle.resourcePath {
             do {
                 let files = try FileManager.default.contentsOfDirectory(atPath: resourcePath)
@@ -708,12 +696,20 @@ class EditableStampTool: SketchTool {
     
     private func drawHandles(in ctx: CGContext, rect: CGRect) {
         let handleSize: CGFloat = 20
+        let backgroundSize: CGFloat = 22
         
         let deleteHandleRect = CGRect(
             x: rect.minX - handleSize/2,
             y: rect.minY - handleSize/2,
             width: handleSize,
             height: handleSize
+        )
+        
+        let deleteBackgroundRect = CGRect(
+            x: rect.minX - backgroundSize/2,
+            y: rect.minY - backgroundSize/2,
+            width: backgroundSize,
+            height: backgroundSize
         )
         
         let resizeHandleRect = CGRect(
@@ -723,6 +719,13 @@ class EditableStampTool: SketchTool {
             height: handleSize
         )
         
+        let resizeBackgroundRect = CGRect(
+            x: rect.maxX - backgroundSize/2,
+            y: rect.minY - backgroundSize/2,
+            width: backgroundSize,
+            height: backgroundSize
+        )
+        
         let rotateHandleRect = CGRect(
             x: rect.maxX - handleSize/2,
             y: rect.maxY - handleSize/2,
@@ -730,24 +733,37 @@ class EditableStampTool: SketchTool {
             height: handleSize
         )
         
-        // 削除ハンドル（PNG画像）
+        let rotateBackgroundRect = CGRect(
+            x: rect.maxX - backgroundSize/2,
+            y: rect.maxY - backgroundSize/2,
+            width: backgroundSize,
+            height: backgroundSize
+        )
+        
+        
+        ctx.saveGState()
+        
+        ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.25).cgColor)
+        ctx.setFillColor(UIColor.white.cgColor)
+        ctx.fillEllipse(in: deleteBackgroundRect)
+        
+        ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
+        ctx.setStrokeColor(UIColor.systemGray5.cgColor)
+        ctx.setLineWidth(0.5)
+        ctx.strokeEllipse(in: deleteBackgroundRect)
+        ctx.restoreGState()
+        
+        
         if let closeIcon = loadIcon(named: "close_icon") {
             closeIcon.draw(in: deleteHandleRect)
         } else {
-            // フォールバック（赤い円 + X）
+            
             ctx.saveGState()
-            ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.3).cgColor)
-            ctx.setFillColor(UIColor.systemRed.cgColor)
-            ctx.fillEllipse(in: deleteHandleRect)
-            
-            ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
-            ctx.setStrokeColor(UIColor.white.cgColor)
+            ctx.setStrokeColor(UIColor.systemRed.cgColor)
             ctx.setLineWidth(2.0)
-            
             let centerX = deleteHandleRect.midX
             let centerY = deleteHandleRect.midY
             let iconSize: CGFloat = 6
-            
             ctx.move(to: CGPoint(x: centerX - iconSize/2, y: centerY - iconSize/2))
             ctx.addLine(to: CGPoint(x: centerX + iconSize/2, y: centerY + iconSize/2))
             ctx.move(to: CGPoint(x: centerX + iconSize/2, y: centerY - iconSize/2))
@@ -756,83 +772,46 @@ class EditableStampTool: SketchTool {
             ctx.restoreGState()
         }
         
-        // リサイズハンドル（PNG画像）
+        
+        ctx.saveGState()
+        
+        ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.25).cgColor)
+        ctx.setFillColor(UIColor.white.cgColor)
+        ctx.fillEllipse(in: resizeBackgroundRect)
+        
+        
+        ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
+        ctx.setStrokeColor(UIColor.systemGray5.cgColor)
+        ctx.setLineWidth(0.5)
+        ctx.strokeEllipse(in: resizeBackgroundRect)
+        ctx.restoreGState()
+        
+        
         if let zoomIcon = loadIcon(named: "zoom_icon") {
             zoomIcon.draw(in: resizeHandleRect)
         } else {
-            // フォールバック（白い円 + ズームアイコン）
-            ctx.saveGState()
-            ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.3).cgColor)
-            ctx.setFillColor(UIColor.white.cgColor)
-            ctx.fillEllipse(in: resizeHandleRect)
             
-            ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
-            ctx.setStrokeColor(UIColor.systemGray4.cgColor)
-            ctx.setLineWidth(1.0)
-            ctx.strokeEllipse(in: resizeHandleRect)
-            
-            let resizeCenterX = resizeHandleRect.midX
-            let resizeCenterY = resizeHandleRect.midY
-            
-            ctx.setStrokeColor(UIColor.systemBlue.cgColor)
-            ctx.setLineWidth(1.5)
-            let outerRect = CGRect(x: resizeCenterX - 5, y: resizeCenterY - 5, width: 10, height: 10)
-            ctx.stroke(outerRect)
-            
-            let innerRect = CGRect(x: resizeCenterX - 2.5, y: resizeCenterY - 2.5, width: 5, height: 5)
-            ctx.stroke(innerRect)
-            
-            ctx.setLineWidth(1.0)
-            ctx.move(to: CGPoint(x: resizeCenterX + 3, y: resizeCenterY - 3))
-            ctx.addLine(to: CGPoint(x: resizeCenterX + 6, y: resizeCenterY - 6))
-            ctx.addLine(to: CGPoint(x: resizeCenterX + 5, y: resizeCenterY - 6))
-            ctx.move(to: CGPoint(x: resizeCenterX + 6, y: resizeCenterY - 6))
-            ctx.addLine(to: CGPoint(x: resizeCenterX + 6, y: resizeCenterY - 5))
-            ctx.strokePath()
-            ctx.restoreGState()
         }
         
-        // 回転ハンドル（PNG画像）
+        
+        ctx.saveGState()
+        
+        ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.25).cgColor)
+        ctx.setFillColor(UIColor.white.cgColor)
+        ctx.fillEllipse(in: rotateBackgroundRect)
+        
+        
+        ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
+        ctx.setStrokeColor(UIColor.systemGray5.cgColor)
+        ctx.setLineWidth(0.5)
+        ctx.strokeEllipse(in: rotateBackgroundRect)
+        ctx.restoreGState()
+        
+        
         if let rotateIcon = loadIcon(named: "rotate_icon") {
             rotateIcon.draw(in: rotateHandleRect)
         } else {
-            // フォールバック（白い円 + 回転アイコン）
-            ctx.saveGState()
-            ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.3).cgColor)
-            ctx.setFillColor(UIColor.white.cgColor)
-            ctx.fillEllipse(in: rotateHandleRect)
             
-            ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
-            ctx.setStrokeColor(UIColor.systemGray4.cgColor)
-            ctx.setLineWidth(1.0)
-            ctx.strokeEllipse(in: rotateHandleRect)
-            
-            let rotateCenterX = rotateHandleRect.midX
-            let rotateCenterY = rotateHandleRect.midY
-            
-            ctx.setStrokeColor(UIColor.systemGreen.cgColor)
-            ctx.setLineWidth(1.5)
-            
-            let radius: CGFloat = 5
-            let rotatePath = CGMutablePath()
-            rotatePath.addArc(center: CGPoint(x: rotateCenterX, y: rotateCenterY),
-                             radius: radius,
-                             startAngle: -CGFloat.pi/6,
-                             endAngle: CGFloat.pi*4/3,
-                             clockwise: false)
-            ctx.addPath(rotatePath)
-            ctx.strokePath()
-            
-            let arrowX = rotateCenterX + radius * cos(CGFloat.pi*4/3)
-            let arrowY = rotateCenterY + radius * sin(CGFloat.pi*4/3)
-            
-            ctx.setLineWidth(1.5)
-            ctx.move(to: CGPoint(x: arrowX, y: arrowY))
-            ctx.addLine(to: CGPoint(x: arrowX - 2, y: arrowY - 2))
-            ctx.move(to: CGPoint(x: arrowX, y: arrowY))
-            ctx.addLine(to: CGPoint(x: arrowX + 1, y: arrowY - 2.5))
-            ctx.strokePath()
-            ctx.restoreGState()
         }
     }
 }
@@ -842,23 +821,23 @@ class FillTool: SketchTool {
     var lineColor: UIColor
     var lineAlpha: CGFloat
     var touchPoint: CGPoint
-
+    
     init() {
         lineWidth = 0
         lineColor = .blue
         lineAlpha = 0
         touchPoint = CGPoint(x: 0, y: 0)
     }
-
+    
     func setInitialPoint(_ firstPoint: CGPoint) {
         touchPoint = firstPoint
     }
-
+    
     func moveFromPoint(_ startPoint: CGPoint, toPoint endPoint: CGPoint) {}
-
+    
     func draw() {
         guard let context: CGContext = UIGraphicsGetCurrentContext() else { print("[ERROR] UIGraphicsGetCurrentContext"); return }
-
+        
         guard let cgimg = context.makeImage() else { return  }
         let ptinImg = CGPoint(x: touchPoint.x * UIScreen.main.scale, y: touchPoint.y * UIScreen.main.scale)
         let img = UIImage(cgImage: cgimg)

@@ -49,6 +49,8 @@ public class SketchView: UIView {
     private var image: UIImage?
     private var backgroundImage: UIImage?
     private var drawMode: ImageRenderingMode = .original
+    private var isDraggingStamp: Bool = false
+    private var dragStartPoint: CGPoint = .zero
     
     private var editingStampTool: EditableStampTool? {
         get {
@@ -166,12 +168,16 @@ public class SketchView: UIView {
         guard let touch = touches.first else { return }
         let touchPoint = touch.location(in: self)
         
-        // 編集中のスタンプ以外がタップされた場合の確定処理
-        if let editingStamp = editingStampTool,
-           !editingStamp.contains(point: touchPoint) &&
-           !editingStamp.isResizeHandleTapped(point: touchPoint) &&
-           !editingStamp.isRotateHandleTapped(point: touchPoint) {
-            confirmStampEditing(stampTool: editingStamp)
+        if let editingStamp = editingStampTool {
+            if editingStamp.isResizeHandleTapped(point: touchPoint) ||
+               editingStamp.isRotateHandleTapped(point: touchPoint) {
+            } else if editingStamp.contains(point: touchPoint) {
+                isDraggingStamp = true
+                dragStartPoint = touchPoint
+                return
+            } else {
+                confirmStampEditing(stampTool: editingStamp)
+            }
         }
         
         if drawTool == .stamp {
@@ -219,7 +225,20 @@ public class SketchView: UIView {
         guard let touch = touches.first else { return }
         let currentPoint = touch.location(in: self)
         
-        // リサイズ中の場合
+        if isDraggingStamp, let editingStamp = editingStampTool {
+            let deltaX = currentPoint.x - dragStartPoint.x
+            let deltaY = currentPoint.y - dragStartPoint.y
+            let newPosition = CGPoint(
+                x: editingStamp.touchPoint.x + deltaX,
+                y: editingStamp.touchPoint.y + deltaY
+            )
+            editingStamp.updatePosition(newPosition)
+            dragStartPoint = currentPoint
+            updateCacheImage(true)
+            setNeedsDisplay()
+            return
+        }
+        
         if let editingStamp = editingStampTool, editingStamp.isResizing {
             editingStamp.updateResize(to: currentPoint)
             updateCacheImage(true)
@@ -227,7 +246,6 @@ public class SketchView: UIView {
             return
         }
         
-        // 回転中の場合
         if let editingStamp = editingStampTool, editingStamp.isRotating {
             editingStamp.updateRotate(to: currentPoint)
             updateCacheImage(true)
@@ -249,7 +267,13 @@ public class SketchView: UIView {
     }
 
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // リサイズ終了
+        if isDraggingStamp {
+            isDraggingStamp = false
+            updateCacheImage(true)
+            setNeedsDisplay()
+            return
+        }
+        
         if let editingStamp = editingStampTool, editingStamp.isResizing {
             editingStamp.endResize()
             updateCacheImage(true)
@@ -257,7 +281,6 @@ public class SketchView: UIView {
             return
         }
         
-        // 回転終了
         if let editingStamp = editingStampTool, editingStamp.isRotating {
             editingStamp.endRotate()
             updateCacheImage(true)
@@ -342,38 +365,29 @@ public class SketchView: UIView {
         return bufferArray.count > 0
     }
     
-    // MARK: - Stamp Tool Functions
-    
     private func handleStampToolTouch(at point: CGPoint) {
-        // 編集中のスタンプがある場合
         if let editingStamp = editingStampTool {
-            // リサイズハンドルがタップされた場合
             if editingStamp.isResizeHandleTapped(point: point) {
                 editingStamp.startResize(at: point)
                 return
             }
             
-            // 回転ハンドルがタップされた場合
             if editingStamp.isRotateHandleTapped(point: point) {
                 editingStamp.startRotate(at: point)
                 return
             }
             
             if editingStamp.contains(point: point) {
-                // 編集中のスタンプ内をタップした場合は何もしない
                 return
             } else {
-                // 編集中のスタンプ外をタップした場合は確定
                 confirmStampEditing(stampTool: editingStamp)
-                return // 確定だけして新しいスタンプは作らない
+                return
             }
         }
         
-        // 既存の確定済みスタンプがタップされたかチェック
         if let existingTool = stampTools.first(where: { $0.contains(point: point) && !$0.isEditing }) {
             editExistingStamp(stampTool: existingTool)
         } else {
-            // 新しいスタンプを作成
             createNewStamp(at: point)
         }
     }
@@ -388,20 +402,16 @@ public class SketchView: UIView {
         bufferArray.removeAllObjects()
         editingStampTool = stampTool
         
-        // 即座に描画を更新（点線枠付きで表示）
         updateCacheImage(true)
         setNeedsDisplay()
     }
     
     private func editExistingStamp(stampTool: EditableStampTool) {
-        // 他のスタンプの編集を終了
         stampTools.forEach { $0.isEditing = false }
         
-        // 指定されたスタンプを編集モードに
         stampTool.isEditing = true
         editingStampTool = stampTool
         
-        // 編集モードの変更を即座に反映
         updateCacheImage(true)
         setNeedsDisplay()
     }
@@ -413,7 +423,6 @@ public class SketchView: UIView {
         setNeedsDisplay()
     }
     
-    // 選択されたスタンプを削除
     public func deleteSelectedStamp() {
         guard let selectedStamp = editingStampTool else { return }
         
@@ -428,7 +437,6 @@ public class SketchView: UIView {
     }
 }
 
-// MARK: - AssociatedKeys
 private struct AssociatedKeys {
     static var editingStampTool = "editingStampTool"
 }

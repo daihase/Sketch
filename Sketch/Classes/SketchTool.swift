@@ -508,7 +508,7 @@ class EditableStampTool: SketchTool {
     
     // リサイズハンドルの領域を取得（右上）
     func getResizeHandleRect() -> CGRect {
-        let handleSize: CGFloat = 24
+        let handleSize: CGFloat = 46
         return CGRect(
             x: stampRect.maxX - handleSize/2,
             y: stampRect.minY - handleSize/2,
@@ -519,7 +519,7 @@ class EditableStampTool: SketchTool {
     
     // 回転ハンドルの領域を取得（右下）
     func getRotateHandleRect() -> CGRect {
-        let handleSize: CGFloat = 24
+        let handleSize: CGFloat = 46
         return CGRect(
             x: stampRect.maxX - handleSize/2,
             y: stampRect.maxY - handleSize/2,
@@ -641,9 +641,9 @@ class EditableStampTool: SketchTool {
     }
     
     private func drawHandles(in ctx: CGContext, rect: CGRect) {
-        let handleSize: CGFloat = 12
+        let handleSize: CGFloat = 20 // ハンドルの表示サイズ
         
-        // リサイズハンドル（右上にチェックマーク）
+        // リサイズハンドル（右上にズームアイコン）
         let resizeHandleRect = CGRect(
             x: rect.maxX - handleSize/2,
             y: rect.minY - handleSize/2,
@@ -661,7 +661,7 @@ class EditableStampTool: SketchTool {
         
         ctx.setFillColor(UIColor.systemBlue.cgColor)
         ctx.setStrokeColor(UIColor.white.cgColor)
-        ctx.setLineWidth(1.0)
+        ctx.setLineWidth(2.0)
         ctx.setLineDash(phase: 0, lengths: [])
         
         // リサイズハンドル描画
@@ -672,38 +672,63 @@ class EditableStampTool: SketchTool {
         ctx.fillEllipse(in: rotateHandleRect)
         ctx.strokeEllipse(in: rotateHandleRect)
         
-        // チェックマークを描画（リサイズハンドル）
+        // ズームアイコンを描画（リサイズハンドル）
         ctx.setStrokeColor(UIColor.white.cgColor)
         ctx.setLineWidth(2.0)
-        let checkPath = CGMutablePath()
+        
         let centerX = resizeHandleRect.midX
         let centerY = resizeHandleRect.midY
-        checkPath.move(to: CGPoint(x: centerX - 3, y: centerY))
-        checkPath.addLine(to: CGPoint(x: centerX - 1, y: centerY + 2))
-        checkPath.addLine(to: CGPoint(x: centerX + 3, y: centerY - 2))
-        ctx.addPath(checkPath)
+        let iconSize: CGFloat = 6
+        
+        // 虫眼鏡の円
+        let magnifyCircle = CGRect(
+            x: centerX - iconSize/2,
+            y: centerY - iconSize/2,
+            width: iconSize,
+            height: iconSize
+        )
+        ctx.strokeEllipse(in: magnifyCircle)
+        
+        // 虫眼鏡の柄
+        let handleStartX = centerX + iconSize/2 * cos(CGFloat.pi/4)
+        let handleStartY = centerY + iconSize/2 * sin(CGFloat.pi/4)
+        let handleEndX = handleStartX + 3
+        let handleEndY = handleStartY + 3
+        
+        ctx.move(to: CGPoint(x: handleStartX, y: handleStartY))
+        ctx.addLine(to: CGPoint(x: handleEndX, y: handleEndY))
+        ctx.strokePath()
+        
+        // プラス記号（拡大を示す）
+        ctx.move(to: CGPoint(x: centerX - 2, y: centerY))
+        ctx.addLine(to: CGPoint(x: centerX + 2, y: centerY))
+        ctx.move(to: CGPoint(x: centerX, y: centerY - 2))
+        ctx.addLine(to: CGPoint(x: centerX, y: centerY + 2))
         ctx.strokePath()
         
         // 回転矢印を描画（回転ハンドル）
-        let rotatePath = CGMutablePath()
         let rotateCenterX = rotateHandleRect.midX
         let rotateCenterY = rotateHandleRect.midY
-        let radius: CGFloat = 3
+        let radius: CGFloat = 6
         
-        // 円弧を描画
+        // 円弧を描画（3/4円）
+        let rotatePath = CGMutablePath()
         rotatePath.addArc(center: CGPoint(x: rotateCenterX, y: rotateCenterY),
                          radius: radius,
-                         startAngle: -CGFloat.pi/4,
-                         endAngle: CGFloat.pi*3/2,
+                         startAngle: -CGFloat.pi/2,
+                         endAngle: CGFloat.pi,
                          clockwise: false)
-        
-        // 矢印の先端
-        rotatePath.move(to: CGPoint(x: rotateCenterX + radius - 1, y: rotateCenterY - radius + 1))
-        rotatePath.addLine(to: CGPoint(x: rotateCenterX + radius + 1, y: rotateCenterY - radius - 1))
-        rotatePath.move(to: CGPoint(x: rotateCenterX + radius - 1, y: rotateCenterY - radius + 1))
-        rotatePath.addLine(to: CGPoint(x: rotateCenterX + radius - 1, y: rotateCenterY - radius - 2))
-        
         ctx.addPath(rotatePath)
+        ctx.strokePath()
+        
+        // 矢印の先端（上向き）
+        let arrowTipX = rotateCenterX - radius
+        let arrowTipY = rotateCenterY
+        
+        ctx.move(to: CGPoint(x: arrowTipX, y: arrowTipY))
+        ctx.addLine(to: CGPoint(x: arrowTipX + 2, y: arrowTipY - 2))
+        ctx.move(to: CGPoint(x: arrowTipX, y: arrowTipY))
+        ctx.addLine(to: CGPoint(x: arrowTipX + 2, y: arrowTipY + 2))
         ctx.strokePath()
     }
 }

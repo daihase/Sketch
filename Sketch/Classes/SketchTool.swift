@@ -685,9 +685,8 @@ class EditableStampTool: SketchTool {
             do {
                 let files = try FileManager.default.contentsOfDirectory(atPath: resourcePath)
                 let pngFiles = files.filter { $0.hasSuffix(".png") }
-                print("   利用可能なPNGファイル: \(pngFiles)")
             } catch {
-                print("   リソースディレクトリの読み取りエラー: \(error)")
+                print("\(error)")
             }
         }
         

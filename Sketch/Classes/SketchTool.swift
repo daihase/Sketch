@@ -533,6 +533,22 @@ class EditableStampTool: SketchTool {
         return getResizeHandleRect().contains(point)
     }
     
+    // 削除ハンドルの領域を取得（左上）
+    func getDeleteHandleRect() -> CGRect {
+        let handleSize: CGFloat = 46
+        return CGRect(
+            x: stampRect.minX - handleSize/2,
+            y: stampRect.minY - handleSize/2,
+            width: handleSize,
+            height: handleSize
+        )
+    }
+    
+    // 削除ハンドルがタップされたかチェック
+    func isDeleteHandleTapped(point: CGPoint) -> Bool {
+        return getDeleteHandleRect().contains(point)
+    }
+    
     // 回転ハンドルがタップされたかチェック
     func isRotateHandleTapped(point: CGPoint) -> Bool {
         return getRotateHandleRect().contains(point)
@@ -643,6 +659,14 @@ class EditableStampTool: SketchTool {
     private func drawHandles(in ctx: CGContext, rect: CGRect) {
         let handleSize: CGFloat = 20
         
+        // 削除ハンドル（左上にXアイコン）
+        let deleteHandleRect = CGRect(
+            x: rect.minX - handleSize/2,
+            y: rect.minY - handleSize/2,
+            width: handleSize,
+            height: handleSize
+        )
+        
         let resizeHandleRect = CGRect(
             x: rect.maxX - handleSize/2,
             y: rect.minY - handleSize/2,
@@ -656,6 +680,32 @@ class EditableStampTool: SketchTool {
             width: handleSize,
             height: handleSize
         )
+        
+        // 削除ハンドル - マテリアルデザイン風削除アイコン
+        ctx.saveGState()
+        
+        // 背景（赤い円 + 影）
+        ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.3).cgColor)
+        ctx.setFillColor(UIColor.systemRed.cgColor)
+        ctx.fillEllipse(in: deleteHandleRect)
+        
+        // Xアイコン
+        ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
+        ctx.setStrokeColor(UIColor.white.cgColor)
+        ctx.setLineWidth(2.0)
+        
+        let centerX = deleteHandleRect.midX
+        let centerY = deleteHandleRect.midY
+        let iconSize: CGFloat = 6
+        
+        // X字を描画
+        ctx.move(to: CGPoint(x: centerX - iconSize/2, y: centerY - iconSize/2))
+        ctx.addLine(to: CGPoint(x: centerX + iconSize/2, y: centerY + iconSize/2))
+        ctx.move(to: CGPoint(x: centerX + iconSize/2, y: centerY - iconSize/2))
+        ctx.addLine(to: CGPoint(x: centerX - iconSize/2, y: centerY + iconSize/2))
+        ctx.strokePath()
+        
+        ctx.restoreGState()
         
         // リサイズハンドル - マテリアルデザイン風ズームアイコン
         ctx.saveGState()
@@ -672,27 +722,27 @@ class EditableStampTool: SketchTool {
         ctx.strokeEllipse(in: resizeHandleRect)
         
         // ズームアウト/イン アイコン
-        let centerX = resizeHandleRect.midX
-        let centerY = resizeHandleRect.midY
+        let resizeCenterX = resizeHandleRect.midX
+        let resizeCenterY = resizeHandleRect.midY
         
         // 外側の四角（ズームアウト）
         ctx.setStrokeColor(UIColor.systemBlue.cgColor)
         ctx.setLineWidth(1.5)
-        let outerRect = CGRect(x: centerX - 5, y: centerY - 5, width: 10, height: 10)
+        let outerRect = CGRect(x: resizeCenterX - 5, y: resizeCenterY - 5, width: 10, height: 10)
         ctx.stroke(outerRect)
         
         // 内側の四角（ズームイン）
-        let innerRect = CGRect(x: centerX - 2.5, y: centerY - 2.5, width: 5, height: 5)
+        let innerRect = CGRect(x: resizeCenterX - 2.5, y: resizeCenterY - 2.5, width: 5, height: 5)
         ctx.stroke(innerRect)
         
         // 矢印（拡大方向を示す）
         ctx.setLineWidth(1.0)
         // 右上矢印
-        ctx.move(to: CGPoint(x: centerX + 3, y: centerY - 3))
-        ctx.addLine(to: CGPoint(x: centerX + 6, y: centerY - 6))
-        ctx.addLine(to: CGPoint(x: centerX + 5, y: centerY - 6))
-        ctx.move(to: CGPoint(x: centerX + 6, y: centerY - 6))
-        ctx.addLine(to: CGPoint(x: centerX + 6, y: centerY - 5))
+        ctx.move(to: CGPoint(x: resizeCenterX + 3, y: resizeCenterY - 3))
+        ctx.addLine(to: CGPoint(x: resizeCenterX + 6, y: resizeCenterY - 6))
+        ctx.addLine(to: CGPoint(x: resizeCenterX + 5, y: resizeCenterY - 6))
+        ctx.move(to: CGPoint(x: resizeCenterX + 6, y: resizeCenterY - 6))
+        ctx.addLine(to: CGPoint(x: resizeCenterX + 6, y: resizeCenterY - 5))
         ctx.strokePath()
         
         ctx.restoreGState()

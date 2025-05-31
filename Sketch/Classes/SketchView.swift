@@ -169,7 +169,10 @@ public class SketchView: UIView {
         let touchPoint = touch.location(in: self)
         
         if let editingStamp = editingStampTool {
-            if editingStamp.isResizeHandleTapped(point: touchPoint) ||
+            if editingStamp.isDeleteHandleTapped(point: touchPoint) {
+                deleteSelectedStamp()
+                return
+            } else if editingStamp.isResizeHandleTapped(point: touchPoint) ||
                editingStamp.isRotateHandleTapped(point: touchPoint) {
             } else if editingStamp.contains(point: touchPoint) {
                 isDraggingStamp = true
@@ -367,6 +370,11 @@ public class SketchView: UIView {
     
     private func handleStampToolTouch(at point: CGPoint) {
         if let editingStamp = editingStampTool {
+            if editingStamp.isDeleteHandleTapped(point: point) {
+                deleteSelectedStamp()
+                return
+            }
+            
             if editingStamp.isResizeHandleTapped(point: point) {
                 editingStamp.startResize(at: point)
                 return

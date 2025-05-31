@@ -40,6 +40,10 @@ public class SketchView: UIView {
     public var drawTool: SketchToolType = .pen
     public var drawingPenType: PenType = .normal
     public var sketchViewDelegate: SketchViewDelegate?
+    
+    
+    public var isStampEditable: Bool = false
+    
     private var currentTool: SketchTool?
     private let pathArray: NSMutableArray = NSMutableArray()
     private let bufferArray: NSMutableArray = NSMutableArray()
@@ -136,7 +140,12 @@ public class SketchView: UIView {
         case .eraser:
             return EraserTool()
         case .stamp:
-            return EditableStampTool()
+            
+            if isStampEditable {
+                return EditableStampTool()
+            } else {
+                return StampTool()
+            }
         case .line:
             return LineTool()
         case .arrow:
@@ -168,24 +177,27 @@ public class SketchView: UIView {
         guard let touch = touches.first else { return }
         let touchPoint = touch.location(in: self)
         
-        if let editingStamp = editingStampTool {
-            if editingStamp.isDeleteHandleTapped(point: touchPoint) {
-                deleteSelectedStamp()
-                return
-            } else if editingStamp.isResizeHandleTapped(point: touchPoint) ||
-                        editingStamp.isRotateHandleTapped(point: touchPoint) {
-            } else if editingStamp.contains(point: touchPoint) {
-                isDraggingStamp = true
-                dragStartPoint = touchPoint
-                return
-            } else {
-                confirmStampEditing(stampTool: editingStamp)
-            }
-        }
         
-        if drawTool == .stamp {
-            handleStampToolTouch(at: touchPoint)
-            return
+        if isStampEditable {
+            if let editingStamp = editingStampTool {
+                if editingStamp.isDeleteHandleTapped(point: touchPoint) {
+                    deleteSelectedStamp()
+                    return
+                } else if editingStamp.isResizeHandleTapped(point: touchPoint) ||
+                            editingStamp.isRotateHandleTapped(point: touchPoint) {
+                } else if editingStamp.contains(point: touchPoint) {
+                    isDraggingStamp = true
+                    dragStartPoint = touchPoint
+                    return
+                } else {
+                    confirmStampEditing(stampTool: editingStamp)
+                }
+            }
+            
+            if drawTool == .stamp {
+                handleEditableStampToolTouch(at: touchPoint)
+                return
+            }
         }
         
         if currentTool != nil {
@@ -228,32 +240,35 @@ public class SketchView: UIView {
         guard let touch = touches.first else { return }
         let currentPoint = touch.location(in: self)
         
-        if isDraggingStamp, let editingStamp = editingStampTool {
-            let deltaX = currentPoint.x - dragStartPoint.x
-            let deltaY = currentPoint.y - dragStartPoint.y
-            let newPosition = CGPoint(
-                x: editingStamp.touchPoint.x + deltaX,
-                y: editingStamp.touchPoint.y + deltaY
-            )
-            editingStamp.updatePosition(newPosition)
-            dragStartPoint = currentPoint
-            updateCacheImage(true)
-            setNeedsDisplay()
-            return
-        }
         
-        if let editingStamp = editingStampTool, editingStamp.isResizing {
-            editingStamp.updateResize(to: currentPoint)
-            updateCacheImage(true)
-            setNeedsDisplay()
-            return
-        }
-        
-        if let editingStamp = editingStampTool, editingStamp.isRotating {
-            editingStamp.updateRotate(to: currentPoint)
-            updateCacheImage(true)
-            setNeedsDisplay()
-            return
+        if isStampEditable {
+            if isDraggingStamp, let editingStamp = editingStampTool {
+                let deltaX = currentPoint.x - dragStartPoint.x
+                let deltaY = currentPoint.y - dragStartPoint.y
+                let newPosition = CGPoint(
+                    x: editingStamp.touchPoint.x + deltaX,
+                    y: editingStamp.touchPoint.y + deltaY
+                )
+                editingStamp.updatePosition(newPosition)
+                dragStartPoint = currentPoint
+                updateCacheImage(true)
+                setNeedsDisplay()
+                return
+            }
+            
+            if let editingStamp = editingStampTool, editingStamp.isResizing {
+                editingStamp.updateResize(to: currentPoint)
+                updateCacheImage(true)
+                setNeedsDisplay()
+                return
+            }
+            
+            if let editingStamp = editingStampTool, editingStamp.isRotating {
+                editingStamp.updateRotate(to: currentPoint)
+                updateCacheImage(true)
+                setNeedsDisplay()
+                return
+            }
         }
         
         previousPoint2 = previousPoint1
@@ -270,25 +285,28 @@ public class SketchView: UIView {
     }
     
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if isDraggingStamp {
-            isDraggingStamp = false
-            updateCacheImage(true)
-            setNeedsDisplay()
-            return
-        }
         
-        if let editingStamp = editingStampTool, editingStamp.isResizing {
-            editingStamp.endResize()
-            updateCacheImage(true)
-            setNeedsDisplay()
-            return
-        }
-        
-        if let editingStamp = editingStampTool, editingStamp.isRotating {
-            editingStamp.endRotate()
-            updateCacheImage(true)
-            setNeedsDisplay()
-            return
+        if isStampEditable {
+            if isDraggingStamp {
+                isDraggingStamp = false
+                updateCacheImage(true)
+                setNeedsDisplay()
+                return
+            }
+            
+            if let editingStamp = editingStampTool, editingStamp.isResizing {
+                editingStamp.endResize()
+                updateCacheImage(true)
+                setNeedsDisplay()
+                return
+            }
+            
+            if let editingStamp = editingStampTool, editingStamp.isRotating {
+                editingStamp.endRotate()
+                updateCacheImage(true)
+                setNeedsDisplay()
+                return
+            }
         }
         
         touchesMoved(touches, with: event)
@@ -310,6 +328,7 @@ public class SketchView: UIView {
         resetTool()
         bufferArray.removeAllObjects()
         pathArray.removeAllObjects()
+        editingStampTool = nil
         updateCacheImage(true)
         
         setNeedsDisplay()
@@ -331,6 +350,7 @@ public class SketchView: UIView {
         backgroundImage =  image.copy() as? UIImage
         bufferArray.removeAllObjects()
         pathArray.removeAllObjects()
+        editingStampTool = nil
         updateCacheImage(true)
         
         setNeedsDisplay()
@@ -340,6 +360,14 @@ public class SketchView: UIView {
         if canUndo() {
             guard let tool = pathArray.lastObject as? SketchTool else { return }
             resetTool()
+            
+            
+            if let editableStamp = tool as? EditableStampTool,
+               let currentEditingStamp = editingStampTool,
+               editableStamp === currentEditingStamp {
+                editingStampTool = nil
+            }
+            
             bufferArray.add(tool)
             pathArray.removeLastObject()
             updateCacheImage(true)
@@ -368,7 +396,8 @@ public class SketchView: UIView {
         return bufferArray.count > 0
     }
     
-    private func handleStampToolTouch(at point: CGPoint) {
+    
+    private func handleEditableStampToolTouch(at point: CGPoint) {
         if let editingStamp = editingStampTool {
             if editingStamp.isDeleteHandleTapped(point: point) {
                 deleteSelectedStamp()
@@ -442,6 +471,15 @@ public class SketchView: UIView {
         editingStampTool = nil
         updateCacheImage(true)
         setNeedsDisplay()
+    }
+    
+    public func setStampEditable(_ editable: Bool) {
+        isStampEditable = editable
+        
+        
+        if let editingStamp = editingStampTool {
+            confirmStampEditing(stampTool: editingStamp)
+        }
     }
 }
 

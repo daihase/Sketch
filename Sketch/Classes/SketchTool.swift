@@ -430,10 +430,19 @@ class EditableStampTool: SketchTool {
     var stampRect: CGRect
     var originalSize: CGSize
     
-    // リサイズ機能用の新しいプロパティ
+    // スケールと回転を分離して管理
+    var currentScale: CGFloat = 1.0
+    var currentRotation: CGFloat = 0.0
+    
+    // リサイズ機能用のプロパティ
     var isResizing: Bool = false
     var resizeStartPoint: CGPoint = .zero
     var resizeStartScale: CGFloat = 1.0
+    
+    // 回転機能用のプロパティ
+    var isRotating: Bool = false
+    var rotateStartPoint: CGPoint = .zero
+    var rotateStartAngle: CGFloat = 0.0
     
     init() {
         lineWidth = 0
@@ -444,6 +453,7 @@ class EditableStampTool: SketchTool {
         transform = .identity
         stampRect = .zero
         originalSize = .zero
+        currentScale = 1.0
     }
     
     func setInitialPoint(_ firstPoint: CGPoint) {
@@ -469,8 +479,8 @@ class EditableStampTool: SketchTool {
         guard let image = stampImage else { return }
         
         let scaledSize = CGSize(
-            width: originalSize.width * abs(transform.a),
-            height: originalSize.height * abs(transform.d)
+            width: originalSize.width * currentScale,
+            height: originalSize.height * currentScale
         )
         
         stampRect = CGRect(
@@ -496,7 +506,7 @@ class EditableStampTool: SketchTool {
         calculateStampRect()
     }
     
-    // リサイズハンドルの領域を取得
+    // リサイズハンドルの領域を取得（右上）
     func getResizeHandleRect() -> CGRect {
         let handleSize: CGFloat = 24
         return CGRect(
@@ -507,37 +517,84 @@ class EditableStampTool: SketchTool {
         )
     }
     
+    // 回転ハンドルの領域を取得（右下）
+    func getRotateHandleRect() -> CGRect {
+        let handleSize: CGFloat = 24
+        return CGRect(
+            x: stampRect.maxX - handleSize/2,
+            y: stampRect.maxY - handleSize/2,
+            width: handleSize,
+            height: handleSize
+        )
+    }
+    
     // リサイズハンドルがタップされたかチェック
     func isResizeHandleTapped(point: CGPoint) -> Bool {
         return getResizeHandleRect().contains(point)
+    }
+    
+    // 回転ハンドルがタップされたかチェック
+    func isRotateHandleTapped(point: CGPoint) -> Bool {
+        return getRotateHandleRect().contains(point)
     }
     
     // リサイズ開始
     func startResize(at point: CGPoint) {
         isResizing = true
         resizeStartPoint = point
-        resizeStartScale = abs(transform.a) // 現在のスケール値
+        resizeStartScale = currentScale
     }
     
     // リサイズ処理
     func updateResize(to point: CGPoint) {
         guard isResizing else { return }
-           
-           let deltaX = point.x - resizeStartPoint.x
-           let scaleChange = deltaX / 30.0
-           // 最小値も外して完全に自由に
-           let newScale = resizeStartScale + scaleChange
-           
-           // ただし、負の値だけは避ける
-           if newScale > 0 {
-               transform = CGAffineTransform(scaleX: newScale, y: newScale)
-               calculateStampRect()
-           }
+        
+        let deltaX = point.x - resizeStartPoint.x
+        let scaleChange = deltaX / 30.0
+        let newScale = resizeStartScale + scaleChange
+        
+        if newScale > 0 {
+            currentScale = newScale
+            transform = CGAffineTransform(scaleX: currentScale, y: currentScale).rotated(by: currentRotation)
+            calculateStampRect()
+        }
     }
     
     // リサイズ終了
     func endResize() {
         isResizing = false
+    }
+    
+    // 回転開始
+    func startRotate(at point: CGPoint) {
+        isRotating = true
+        rotateStartPoint = point
+        rotateStartAngle = currentRotation
+    }
+    
+    // 回転処理
+    func updateRotate(to point: CGPoint) {
+        guard isRotating else { return }
+        
+        // スタンプの中心点
+        let center = CGPoint(x: touchPoint.x, y: touchPoint.y)
+        
+        // 開始点と現在点の角度を計算
+        let startAngle = atan2(rotateStartPoint.y - center.y, rotateStartPoint.x - center.x)
+        let currentAngle = atan2(point.y - center.y, point.x - center.x)
+        
+        // 角度の差分を計算
+        let angleDelta = currentAngle - startAngle
+        currentRotation = rotateStartAngle + angleDelta
+        
+        // スケールは変えずに回転だけ更新
+        transform = CGAffineTransform(scaleX: currentScale, y: currentScale).rotated(by: currentRotation)
+        calculateStampRect()
+    }
+    
+    // 回転終了
+    func endRotate() {
+        isRotating = false
     }
     
     func draw() {
@@ -578,12 +635,12 @@ class EditableStampTool: SketchTool {
         ctx.setLineDash(phase: 0, lengths: [8, 8])
         ctx.stroke(borderRect)
         
-        drawResizeHandle(in: ctx, rect: borderRect)
+        drawHandles(in: ctx, rect: borderRect)
         
         ctx.restoreGState()
     }
     
-    private func drawResizeHandle(in ctx: CGContext, rect: CGRect) {
+    private func drawHandles(in ctx: CGContext, rect: CGRect) {
         let handleSize: CGFloat = 12
         
         // リサイズハンドル（右上にチェックマーク）
@@ -594,15 +651,28 @@ class EditableStampTool: SketchTool {
             height: handleSize
         )
         
+        // 回転ハンドル（右下に回転矢印）
+        let rotateHandleRect = CGRect(
+            x: rect.maxX - handleSize/2,
+            y: rect.maxY - handleSize/2,
+            width: handleSize,
+            height: handleSize
+        )
+        
         ctx.setFillColor(UIColor.systemBlue.cgColor)
         ctx.setStrokeColor(UIColor.white.cgColor)
         ctx.setLineWidth(1.0)
         ctx.setLineDash(phase: 0, lengths: [])
         
+        // リサイズハンドル描画
         ctx.fillEllipse(in: resizeHandleRect)
         ctx.strokeEllipse(in: resizeHandleRect)
         
-        // チェックマークを描画
+        // 回転ハンドル描画
+        ctx.fillEllipse(in: rotateHandleRect)
+        ctx.strokeEllipse(in: rotateHandleRect)
+        
+        // チェックマークを描画（リサイズハンドル）
         ctx.setStrokeColor(UIColor.white.cgColor)
         ctx.setLineWidth(2.0)
         let checkPath = CGMutablePath()
@@ -612,6 +682,28 @@ class EditableStampTool: SketchTool {
         checkPath.addLine(to: CGPoint(x: centerX - 1, y: centerY + 2))
         checkPath.addLine(to: CGPoint(x: centerX + 3, y: centerY - 2))
         ctx.addPath(checkPath)
+        ctx.strokePath()
+        
+        // 回転矢印を描画（回転ハンドル）
+        let rotatePath = CGMutablePath()
+        let rotateCenterX = rotateHandleRect.midX
+        let rotateCenterY = rotateHandleRect.midY
+        let radius: CGFloat = 3
+        
+        // 円弧を描画
+        rotatePath.addArc(center: CGPoint(x: rotateCenterX, y: rotateCenterY),
+                         radius: radius,
+                         startAngle: -CGFloat.pi/4,
+                         endAngle: CGFloat.pi*3/2,
+                         clockwise: false)
+        
+        // 矢印の先端
+        rotatePath.move(to: CGPoint(x: rotateCenterX + radius - 1, y: rotateCenterY - radius + 1))
+        rotatePath.addLine(to: CGPoint(x: rotateCenterX + radius + 1, y: rotateCenterY - radius - 1))
+        rotatePath.move(to: CGPoint(x: rotateCenterX + radius - 1, y: rotateCenterY - radius + 1))
+        rotatePath.addLine(to: CGPoint(x: rotateCenterX + radius - 1, y: rotateCenterY - radius - 2))
+        
+        ctx.addPath(rotatePath)
         ctx.strokePath()
     }
 }

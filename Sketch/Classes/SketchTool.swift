@@ -656,10 +656,59 @@ class EditableStampTool: SketchTool {
         ctx.restoreGState()
     }
     
+    private func loadIcon(named name: String) -> UIImage? {
+        // メインバンドル（アプリ）から試す
+        if let image = UIImage(named: name) {
+            print("✅ 画像読み込み成功 (メインバンドル): \(name)")
+            return image
+        }
+        
+        // Frameworkのバンドルから試す
+        let frameworkBundle = Bundle(for: EditableStampTool.self)
+        if let image = UIImage(named: name, in: frameworkBundle, compatibleWith: nil) {
+            print("✅ 画像読み込み成功 (Framework): \(name)")
+            return image
+        }
+        
+        // Frameworkのリソースバンドルから試す（CocoaPodsスタイル）
+        if let resourceBundleURL = frameworkBundle.url(forResource: "Sketch", withExtension: "bundle"),
+           let resourceBundle = Bundle(url: resourceBundleURL) {
+            if let image = UIImage(named: name, in: resourceBundle, compatibleWith: nil) {
+                print("✅ 画像読み込み成功 (リソースバンドル): \(name)")
+                return image
+            }
+        }
+        
+        // 直接ファイルパスから読み込みを試す
+        let possibleNames = [name, "\(name)@1x", "\(name)@2x", "\(name)@3x"]
+        for fileName in possibleNames {
+            if let imageURL = frameworkBundle.url(forResource: fileName, withExtension: "png"),
+               let image = UIImage(contentsOfFile: imageURL.path) {
+                print("✅ 画像読み込み成功 (直接パス): \(fileName).png")
+                return image
+            }
+        }
+        
+        print("❌ 画像読み込み失敗: \(name)")
+        print("   Framework: \(frameworkBundle.bundlePath)")
+        
+        // Framework内のリソースを列挙してデバッグ
+        if let resourcePath = frameworkBundle.resourcePath {
+            do {
+                let files = try FileManager.default.contentsOfDirectory(atPath: resourcePath)
+                let pngFiles = files.filter { $0.hasSuffix(".png") }
+                print("   利用可能なPNGファイル: \(pngFiles)")
+            } catch {
+                print("   リソースディレクトリの読み取りエラー: \(error)")
+            }
+        }
+        
+        return nil
+    }
+    
     private func drawHandles(in ctx: CGContext, rect: CGRect) {
         let handleSize: CGFloat = 20
         
-        // 削除ハンドル（左上にXアイコン）
         let deleteHandleRect = CGRect(
             x: rect.minX - handleSize/2,
             y: rect.minY - handleSize/2,
@@ -681,116 +730,110 @@ class EditableStampTool: SketchTool {
             height: handleSize
         )
         
-        // 削除ハンドル - マテリアルデザイン風削除アイコン
-        ctx.saveGState()
+        // 削除ハンドル（PNG画像）
+        if let closeIcon = loadIcon(named: "close_icon") {
+            closeIcon.draw(in: deleteHandleRect)
+        } else {
+            // フォールバック（赤い円 + X）
+            ctx.saveGState()
+            ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.3).cgColor)
+            ctx.setFillColor(UIColor.systemRed.cgColor)
+            ctx.fillEllipse(in: deleteHandleRect)
+            
+            ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
+            ctx.setStrokeColor(UIColor.white.cgColor)
+            ctx.setLineWidth(2.0)
+            
+            let centerX = deleteHandleRect.midX
+            let centerY = deleteHandleRect.midY
+            let iconSize: CGFloat = 6
+            
+            ctx.move(to: CGPoint(x: centerX - iconSize/2, y: centerY - iconSize/2))
+            ctx.addLine(to: CGPoint(x: centerX + iconSize/2, y: centerY + iconSize/2))
+            ctx.move(to: CGPoint(x: centerX + iconSize/2, y: centerY - iconSize/2))
+            ctx.addLine(to: CGPoint(x: centerX - iconSize/2, y: centerY + iconSize/2))
+            ctx.strokePath()
+            ctx.restoreGState()
+        }
         
-        // 背景（赤い円 + 影）
-        ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.3).cgColor)
-        ctx.setFillColor(UIColor.systemRed.cgColor)
-        ctx.fillEllipse(in: deleteHandleRect)
+        // リサイズハンドル（PNG画像）
+        if let zoomIcon = loadIcon(named: "zoom_icon") {
+            zoomIcon.draw(in: resizeHandleRect)
+        } else {
+            // フォールバック（白い円 + ズームアイコン）
+            ctx.saveGState()
+            ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.3).cgColor)
+            ctx.setFillColor(UIColor.white.cgColor)
+            ctx.fillEllipse(in: resizeHandleRect)
+            
+            ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
+            ctx.setStrokeColor(UIColor.systemGray4.cgColor)
+            ctx.setLineWidth(1.0)
+            ctx.strokeEllipse(in: resizeHandleRect)
+            
+            let resizeCenterX = resizeHandleRect.midX
+            let resizeCenterY = resizeHandleRect.midY
+            
+            ctx.setStrokeColor(UIColor.systemBlue.cgColor)
+            ctx.setLineWidth(1.5)
+            let outerRect = CGRect(x: resizeCenterX - 5, y: resizeCenterY - 5, width: 10, height: 10)
+            ctx.stroke(outerRect)
+            
+            let innerRect = CGRect(x: resizeCenterX - 2.5, y: resizeCenterY - 2.5, width: 5, height: 5)
+            ctx.stroke(innerRect)
+            
+            ctx.setLineWidth(1.0)
+            ctx.move(to: CGPoint(x: resizeCenterX + 3, y: resizeCenterY - 3))
+            ctx.addLine(to: CGPoint(x: resizeCenterX + 6, y: resizeCenterY - 6))
+            ctx.addLine(to: CGPoint(x: resizeCenterX + 5, y: resizeCenterY - 6))
+            ctx.move(to: CGPoint(x: resizeCenterX + 6, y: resizeCenterY - 6))
+            ctx.addLine(to: CGPoint(x: resizeCenterX + 6, y: resizeCenterY - 5))
+            ctx.strokePath()
+            ctx.restoreGState()
+        }
         
-        // Xアイコン
-        ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
-        ctx.setStrokeColor(UIColor.white.cgColor)
-        ctx.setLineWidth(2.0)
-        
-        let centerX = deleteHandleRect.midX
-        let centerY = deleteHandleRect.midY
-        let iconSize: CGFloat = 6
-        
-        // X字を描画
-        ctx.move(to: CGPoint(x: centerX - iconSize/2, y: centerY - iconSize/2))
-        ctx.addLine(to: CGPoint(x: centerX + iconSize/2, y: centerY + iconSize/2))
-        ctx.move(to: CGPoint(x: centerX + iconSize/2, y: centerY - iconSize/2))
-        ctx.addLine(to: CGPoint(x: centerX - iconSize/2, y: centerY + iconSize/2))
-        ctx.strokePath()
-        
-        ctx.restoreGState()
-        
-        // リサイズハンドル - マテリアルデザイン風ズームアイコン
-        ctx.saveGState()
-        
-        // 背景（白い円 + 影）
-        ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.3).cgColor)
-        ctx.setFillColor(UIColor.white.cgColor)
-        ctx.fillEllipse(in: resizeHandleRect)
-        
-        // 枠線
-        ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
-        ctx.setStrokeColor(UIColor.systemGray4.cgColor)
-        ctx.setLineWidth(1.0)
-        ctx.strokeEllipse(in: resizeHandleRect)
-        
-        // ズームアウト/イン アイコン
-        let resizeCenterX = resizeHandleRect.midX
-        let resizeCenterY = resizeHandleRect.midY
-        
-        // 外側の四角（ズームアウト）
-        ctx.setStrokeColor(UIColor.systemBlue.cgColor)
-        ctx.setLineWidth(1.5)
-        let outerRect = CGRect(x: resizeCenterX - 5, y: resizeCenterY - 5, width: 10, height: 10)
-        ctx.stroke(outerRect)
-        
-        // 内側の四角（ズームイン）
-        let innerRect = CGRect(x: resizeCenterX - 2.5, y: resizeCenterY - 2.5, width: 5, height: 5)
-        ctx.stroke(innerRect)
-        
-        // 矢印（拡大方向を示す）
-        ctx.setLineWidth(1.0)
-        // 右上矢印
-        ctx.move(to: CGPoint(x: resizeCenterX + 3, y: resizeCenterY - 3))
-        ctx.addLine(to: CGPoint(x: resizeCenterX + 6, y: resizeCenterY - 6))
-        ctx.addLine(to: CGPoint(x: resizeCenterX + 5, y: resizeCenterY - 6))
-        ctx.move(to: CGPoint(x: resizeCenterX + 6, y: resizeCenterY - 6))
-        ctx.addLine(to: CGPoint(x: resizeCenterX + 6, y: resizeCenterY - 5))
-        ctx.strokePath()
-        
-        ctx.restoreGState()
-        
-        // 回転ハンドル - マテリアルデザイン風回転アイコン
-        ctx.saveGState()
-        
-        // 背景（白い円 + 影）
-        ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.3).cgColor)
-        ctx.setFillColor(UIColor.white.cgColor)
-        ctx.fillEllipse(in: rotateHandleRect)
-        
-        // 枠線
-        ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
-        ctx.setStrokeColor(UIColor.systemGray4.cgColor)
-        ctx.setLineWidth(1.0)
-        ctx.strokeEllipse(in: rotateHandleRect)
-        
-        // 回転アイコン
-        let rotateCenterX = rotateHandleRect.midX
-        let rotateCenterY = rotateHandleRect.midY
-        
-        ctx.setStrokeColor(UIColor.systemGreen.cgColor)
-        ctx.setLineWidth(1.5)
-        
-        // 円弧（3/4周）
-        let radius: CGFloat = 5
-        let rotatePath = CGMutablePath()
-        rotatePath.addArc(center: CGPoint(x: rotateCenterX, y: rotateCenterY),
-                         radius: radius,
-                         startAngle: -CGFloat.pi/6,
-                         endAngle: CGFloat.pi*4/3,
-                         clockwise: false)
-        ctx.addPath(rotatePath)
-        ctx.strokePath()
-        
-        // 矢印（回転方向を示す）
-        let arrowX = rotateCenterX + radius * cos(CGFloat.pi*4/3)
-        let arrowY = rotateCenterY + radius * sin(CGFloat.pi*4/3)
-        
-        ctx.setLineWidth(1.5)
-        ctx.move(to: CGPoint(x: arrowX, y: arrowY))
-        ctx.addLine(to: CGPoint(x: arrowX - 2, y: arrowY - 2))
-        ctx.move(to: CGPoint(x: arrowX, y: arrowY))
-        ctx.addLine(to: CGPoint(x: arrowX + 1, y: arrowY - 2.5))
-        ctx.strokePath()
-        
-        ctx.restoreGState()
+        // 回転ハンドル（PNG画像）
+        if let rotateIcon = loadIcon(named: "rotate_icon") {
+            rotateIcon.draw(in: rotateHandleRect)
+        } else {
+            // フォールバック（白い円 + 回転アイコン）
+            ctx.saveGState()
+            ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.3).cgColor)
+            ctx.setFillColor(UIColor.white.cgColor)
+            ctx.fillEllipse(in: rotateHandleRect)
+            
+            ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
+            ctx.setStrokeColor(UIColor.systemGray4.cgColor)
+            ctx.setLineWidth(1.0)
+            ctx.strokeEllipse(in: rotateHandleRect)
+            
+            let rotateCenterX = rotateHandleRect.midX
+            let rotateCenterY = rotateHandleRect.midY
+            
+            ctx.setStrokeColor(UIColor.systemGreen.cgColor)
+            ctx.setLineWidth(1.5)
+            
+            let radius: CGFloat = 5
+            let rotatePath = CGMutablePath()
+            rotatePath.addArc(center: CGPoint(x: rotateCenterX, y: rotateCenterY),
+                             radius: radius,
+                             startAngle: -CGFloat.pi/6,
+                             endAngle: CGFloat.pi*4/3,
+                             clockwise: false)
+            ctx.addPath(rotatePath)
+            ctx.strokePath()
+            
+            let arrowX = rotateCenterX + radius * cos(CGFloat.pi*4/3)
+            let arrowY = rotateCenterY + radius * sin(CGFloat.pi*4/3)
+            
+            ctx.setLineWidth(1.5)
+            ctx.move(to: CGPoint(x: arrowX, y: arrowY))
+            ctx.addLine(to: CGPoint(x: arrowX - 2, y: arrowY - 2))
+            ctx.move(to: CGPoint(x: arrowX, y: arrowY))
+            ctx.addLine(to: CGPoint(x: arrowX + 1, y: arrowY - 2.5))
+            ctx.strokePath()
+            ctx.restoreGState()
+        }
     }
 }
 

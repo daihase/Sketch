@@ -16,10 +16,32 @@ Sketch has basic functions for drawing from the beginning. Anyone can easily cre
 ![Sketch_animation2](https://raw.github.com/wiki/daihase/resource_manage/gifs/sketch-gif-image-2.gif)
 ![Sketch_animation3](https://raw.github.com/wiki/daihase/resource_manage/gifs/sketch-gif-image-3.gif)
 
+
+
+<table>
+  <tr>
+    <th>Freehand Drawing</th>
+    <th>Shape Tools</th>
+    <th>Stamp Tool</th>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/8aeda8e9-97e0-413d-9203-75efdce3582a" width="95%" />
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/1ff55a72-97ee-433c-aa28-4fdb49e873bc" width="95%" />
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/a4f0825b-62a9-496b-bb1e-2ebe102558fc" width="95%" />
+    </td>
+  </tr>
+</table>
+
 ## :memo: Features
 - [x] Pen tool
 - [x] Eraser tool
 - [x] Stamp tool
+- [x] Editable Stamp tool
 - [x] Fill
 - [x] Undo / Redo
 - [x] Draw on Camera / Gallery image

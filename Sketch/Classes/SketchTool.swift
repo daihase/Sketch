@@ -637,6 +637,9 @@ class EditableStampTool: SketchTool {
         let borderRect = stampRect.insetBy(dx: -5, dy: -5)
         
         ctx.saveGState()
+        ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
+        ctx.setBlendMode(.normal)
+        
         ctx.setStrokeColor(UIColor.systemBlue.cgColor)
         ctx.setLineWidth(2.0)
         ctx.setLineDash(phase: 0, lengths: [8, 8])
@@ -739,25 +742,27 @@ class EditableStampTool: SketchTool {
             height: backgroundSize
         )
         
-        
         ctx.saveGState()
-        
+        ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
+        ctx.setBlendMode(.normal)
+        ctx.setAlpha(1.0)
         ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.25).cgColor)
         ctx.setFillColor(UIColor.white.cgColor)
         ctx.fillEllipse(in: deleteBackgroundRect)
-        
         ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
         ctx.setStrokeColor(UIColor.systemGray5.cgColor)
         ctx.setLineWidth(0.5)
         ctx.strokeEllipse(in: deleteBackgroundRect)
         ctx.restoreGState()
         
-        
         if let closeIcon = loadIcon(named: "close_icon") {
             closeIcon.draw(in: deleteHandleRect)
         } else {
-            
             ctx.saveGState()
+            ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
+            ctx.setBlendMode(.normal)
+            ctx.setAlpha(1.0)
+            
             ctx.setStrokeColor(UIColor.systemRed.cgColor)
             ctx.setLineWidth(2.0)
             let centerX = deleteHandleRect.midX
@@ -771,13 +776,14 @@ class EditableStampTool: SketchTool {
             ctx.restoreGState()
         }
         
-        
         ctx.saveGState()
+        ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
+        ctx.setBlendMode(.normal)
+        ctx.setAlpha(1.0)
         
         ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.25).cgColor)
         ctx.setFillColor(UIColor.white.cgColor)
         ctx.fillEllipse(in: resizeBackgroundRect)
-        
         
         ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
         ctx.setStrokeColor(UIColor.systemGray5.cgColor)
@@ -785,20 +791,19 @@ class EditableStampTool: SketchTool {
         ctx.strokeEllipse(in: resizeBackgroundRect)
         ctx.restoreGState()
         
-        
         if let zoomIcon = loadIcon(named: "zoom_icon") {
             zoomIcon.draw(in: resizeHandleRect)
-        } else {
-            
         }
         
-        
         ctx.saveGState()
+        
+        ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
+        ctx.setBlendMode(.normal)
+        ctx.setAlpha(1.0)
         
         ctx.setShadow(offset: CGSize(width: 0, height: 2), blur: 4, color: UIColor.black.withAlphaComponent(0.25).cgColor)
         ctx.setFillColor(UIColor.white.cgColor)
         ctx.fillEllipse(in: rotateBackgroundRect)
-        
         
         ctx.setShadow(offset: CGSize.zero, blur: 0, color: nil)
         ctx.setStrokeColor(UIColor.systemGray5.cgColor)
@@ -806,11 +811,8 @@ class EditableStampTool: SketchTool {
         ctx.strokeEllipse(in: rotateBackgroundRect)
         ctx.restoreGState()
         
-        
         if let rotateIcon = loadIcon(named: "rotate_icon") {
             rotateIcon.draw(in: rotateHandleRect)
-        } else {
-            
         }
     }
 }

@@ -151,7 +151,7 @@ extension ViewController {
     private func changeStampMode(stampName: String) {
         sketchView.stampImage = UIImage(named: stampName)
         // Set to true if you want to use editable stamp mode
-        //sketchView.isStampEditable = true
+        sketchView.isStampEditable = true
         sketchView.drawTool = .stamp
     }
     

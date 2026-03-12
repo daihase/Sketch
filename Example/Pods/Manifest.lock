@@ -1,7 +1,7 @@
 PODS:
   - Nimble (12.3.0)
   - Quick (6.1.0)
-  - Sketch (3.1)
+  - Sketch (4.0)
 
 DEPENDENCIES:
   - Nimble (~> 12.0)
@@ -20,7 +20,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Nimble: f8a8219d16f176429b951e8f7e72df5c23ceddc0
   Quick: 6676ffb409bf04abba2ff23902af2407bfc6ac90
-  Sketch: db5a2d1de16fbf1fbdf57343a89c99b64b33ecf1
+  Sketch: 6425aef3a1300c9dcd7289b0298ca4a7432d29ae
 
 PODFILE CHECKSUM: 783d57fce02de4f41538451225645295fae3b470
 

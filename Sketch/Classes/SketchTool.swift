@@ -651,48 +651,36 @@ class EditableStampTool: SketchTool {
     }
     
     private func loadIcon(named name: String) -> UIImage? {
-        
-        if let image = UIImage(named: name) {
-            
+        #if SWIFT_PACKAGE
+        if let image = UIImage(named: name, in: Bundle.module, compatibleWith: nil) {
             return image
         }
-        
-        
+        #endif
+
+        if let image = UIImage(named: name) {
+            return image
+        }
+
         let frameworkBundle = Bundle(for: EditableStampTool.self)
         if let image = UIImage(named: name, in: frameworkBundle, compatibleWith: nil) {
-            
             return image
         }
-        
-        
+
         if let resourceBundleURL = frameworkBundle.url(forResource: "Sketch", withExtension: "bundle"),
            let resourceBundle = Bundle(url: resourceBundleURL) {
             if let image = UIImage(named: name, in: resourceBundle, compatibleWith: nil) {
-                
                 return image
             }
         }
-        
-        
+
         let possibleNames = [name, "\(name)@1x", "\(name)@2x", "\(name)@3x"]
         for fileName in possibleNames {
             if let imageURL = frameworkBundle.url(forResource: fileName, withExtension: "png"),
                let image = UIImage(contentsOfFile: imageURL.path) {
-                
+                return image
             }
         }
-        
-        
-        
-        if let resourcePath = frameworkBundle.resourcePath {
-            do {
-                let files = try FileManager.default.contentsOfDirectory(atPath: resourcePath)
-                let pngFiles = files.filter { $0.hasSuffix(".png") }
-            } catch {
-                print("\(error)")
-            }
-        }
-        
+
         return nil
     }
     

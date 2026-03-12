@@ -5,6 +5,7 @@
 ![platforms](https://img.shields.io/badge/platforms-iOS-333333.svg)
 [![License](https://img.shields.io/cocoapods/l/Sketch.svg?style=flat)](http://cocoapods.org/pods/Sketch)
 [![Language: Swift 5.0](https://img.shields.io/badge/swift-5.0-4BC51D.svg?style=flat)](https://developer.apple.com/swift)
+[![Swift Package Manager](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager/)
 [![CocoaPods](https://img.shields.io/badge/Cocoa%20Pods-✓-4BC51D.svg?style=flat)](https://cocoapods.org/pods/Sketch)
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
@@ -52,24 +53,40 @@ Sketch has basic functions for drawing from the beginning. Anyone can easily cre
 - [x] Multiple Pen Filters (Neon, Blur)
 
 ## :pencil2: Requirements
-- Xcode 9.0+
-- Swift 4.0+ (**Swift 5 is ready** :thumbsup:)
+- iOS 13.0+
+- Xcode 11.0+
+- Swift 5.0+
 
 ## :pencil2: Installation
 
+#### Using [Swift Package Manager](https://swift.org/package-manager/) (Recommended)
+
+In Xcode, go to **File → Add Package Dependencies...** and enter the repository URL:
+
+```
+https://github.com/daihase/Sketch.git
+```
+
+Or add it to your `Package.swift`:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/daihase/Sketch.git", from: "4.0.0")
+]
+```
+
 #### Using [CocoaPods](https://cocoapods.org)
 
-Sketch is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+Add the following line to your Podfile:
 
 ```ruby
 pod 'Sketch'
 ```
 
-And run this command:
+Then run:
 ```ruby
 $ pod install
- ```
+```
 
 #### Using [Carthage](https://github.com/Carthage/Carthage)
 
@@ -78,7 +95,7 @@ Add this to Cartfile:
 github "daihase/Sketch"
 ```
 
-Then run this command:
+Then run:
 ```ruby
 $ carthage update
 ```
